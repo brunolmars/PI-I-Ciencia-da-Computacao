@@ -1,6 +1,10 @@
-# Projeto Integrador I - Educação Financeira: A Chave para Seus Investimentos
+# Projeto Integrador I - SGEF(Sistema de Gestão e Educação Financeira): A Chave para Seus Investimentos
 
-## 📚 PI-I - Ciência da Computação
+## Curso: Ciência da Computação
+
+## Instituição: Centro Universitário de Brasília (UniCEUB)
+
+## Projeto Integrador I
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Versão](https://img.shields.io/badge/versão-1.0-blue)
