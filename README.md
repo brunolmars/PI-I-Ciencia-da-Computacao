@@ -1,4 +1,4 @@
-# Projeto Integrador I - SGEF(Sistema de Gestão e Educação Financeira): A Chave para Seus Investimentos
+# SGEF(Sistema de Gestão e Educação Financeira): A Chave para Seus Investimentos
 
 ## Curso: Ciência da Computação
 
