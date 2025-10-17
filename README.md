@@ -1,16 +1,16 @@
 # SGEF(Sistema de Gestão e Educação Financeira): A Chave para Seus Investimentos
 
-## Curso: Ciência da Computação
-
-## Instituição: Centro Universitário de Brasília (UniCEUB)
-
-## Projeto Integrador I
-
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Versão](https://img.shields.io/badge/versão-1.0-blue)
 ![Contribuições](https://img.shields.io/badge/contribuições-bem--vindas-brightgreen)
 ![Feito com](https://img.shields.io/badge/Feito%20com-Love-red)
 ![Tecnologias](https://img.shields.io/badge/Tecnologias-Python%20%7C%20HTML%20%7C%20Bootstrap-blueviolet)
+
+## Curso: Ciência da Computação
+
+## Instituição: Centro Universitário de Brasília (UniCEUB)
+
+## Projeto Integrador I
 
 ---
 
