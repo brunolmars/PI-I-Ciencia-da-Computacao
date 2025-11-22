@@ -83,7 +83,6 @@ Os scripts de Python que guiam o fluxo de ETL e análise estão localizados em `
 | :----------------------------- | :--------------------------------------------------------------------------------------------------------- |
 | `01_BCB_Data.pynb`             | Extrai e limpa os dados macroeconômicos do BCB.                                                            |
 | `02_Data_Forms.pynb`           | Realiza a limpeza (`Sim`/`Não`, padronização de texto) e gera as análises e gráficos do formulário.        |
-| `03_estruturar_base_dados.py`  | **Cria a Base Estruturada** (modulariza o `df_limpo` em tabelas) e salva o entregável final.               |
 
 ---
 
