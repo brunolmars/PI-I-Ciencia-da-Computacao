@@ -1,4 +1,4 @@
-# SGEF(Sistema de Gestão e Educação Financeira): A Chave para Seus Investimentos
+# 🚀 SGEF (Sistema de Gestão e Educação Financeira): A Chave para Seus Investimentos
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Versão](https://img.shields.io/badge/versão-1.0-blue)
@@ -23,23 +23,67 @@ Este projeto visa auxiliar qualquer pessoa a aprender sobre o mercado financeiro
 Você encontrará materiais, ferramentas e exemplos focados em:
 
 - **Renda Variável:**
-  - **Bolsa de Valores (Ações)**
-  - **Fundos de Investimento Imobiliário (FIIs)**
+    - **Bolsa de Valores (Ações)**
+    - **Fundos de Investimento Imobiliário (FIIs)**
 - **Renda Fixa e Títulos Públicos:**
-  - **Tesouro Direto** (Selic, Prefixado e IPCA+)
-  - **Renda Fixa Privada** (CDBs, LCIs, LCAs, Debêntures, etc.)
+    - **Tesouro Direto** (Selic, Prefixado e IPCA+)
+    - **Renda Fixa Privada** (CDBs, LCIs, LCAs, Debêntures, etc.)
 
 ---
 
 ## 💻 Tecnologias Utilizadas
 
-Este projeto foi desenvolvido utilizando as seguintes tecnologias:
+Este projeto foi desenvolvido utilizando as seguintes tecnologias, incluindo as bibliotecas de Data Science e Análise de Dados:
 
-| Categoria              | Tecnologia    | Descrição                                                                                  |
-| :--------------------- | :------------ | :----------------------------------------------------------------------------------------- |
-| **Backend/Lógica**     | **Python**    | Utilizado para scripts de análise de dados, cálculo de indicadores ou lógica do simulador. |
-| **Frontend/Estrutura** | **HTML5**     | Estrutura fundamental das páginas web.                                                     |
-| **Frontend/Design**    | **Bootstrap** | Framework para um design responsivo, moderno e padronizado.                                |
+| Categoria               | Tecnologia           | Descrição                                                                                                       |
+| :---------------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------- |
+| **Backend/Lógica**      | **Python**           | Lógica do simulador e scripts de **Análise e Engenharia de Dados (ETL)**.                                       |
+| **Análise de Dados**    | **Pandas / Seaborn** | Manipulação, limpeza de dados e criação de gráficos analíticos.                                                 |
+| **Frontend/Estrutura**  | **HTML5**            | Estrutura fundamental das páginas web.                                                                          |
+
+---
+
+## 💾 Arquitetura e Fluxo de Dados (ETL)
+
+O projeto segue um fluxo de trabalho claro de **Extração, Transformação e Carga (ETL)**, que combina dados macroeconômicos e comportamentais para gerar insights.
+
+### 1. Fontes de Dados
+
+- **API do Banco Central do Brasil (BCB):** Extração de indicadores macroeconômicos (SELIC, IPCA) para contextualizar o ambiente de investimento.
+- **Formulário de Pesquisa (CSV):** Dados primários sobre o perfil, conhecimento, objetivos e comportamento de investimento do público.
+
+### 2. Base de Dados Estruturada (O Entregável)
+
+O processo de ETL resulta em uma base de dados modularizada e salva na pasta `./data/structured/`, composta pelas seguintes tabelas (DataFrames):
+
+| Tabela                     | Conteúdo Principal                               |
+| :------------------------- | :----------------------------------------------- |
+| `tabela_bcb_metadados`     | Séries históricas de SELIC e IPCA.               |
+| `tabela_perfil_pessoal`    | Faixa Etária, Nível de Conhecimento, Objetivo.   |
+| `tabela_comportamento`     | Reserva Financeira, Participação em Apostas.     |
+| `tabela_investimentos`     | Uso de Poupança, Renda Fixa, Renda Variável.     |
+
+---
+
+## 📈 Análise de Dados e Insights Gerados
+
+Os scripts analíticos são utilizados para responder perguntas-chave sobre o público:
+
+1.  **Adoção de Risco:** Existe uma correlação entre **Faixa Etária** e a **participação em Renda Variável** ou **Apostas**?
+2.  **Educação vs. Prática:** Qual a relação entre o **Nível de Conhecimento** autodeclarado e a posse de uma **Reserva de Emergência**?
+3.  **Metas vs. Perfil:** Como o **Objetivo Financeiro** (Ex: Viver de Renda) se alinha com a **Decisão Financeira** (Ex: Preferência por segurança ou por assumir novos riscos)?
+
+---
+
+## 📁 Estrutura do Repositório (Scripts)
+
+Os scripts de Python que guiam o fluxo de ETL e análise estão localizados em `./scripts/` e devem ser executados em ordem:
+
+| Script                         | Função Principal                                                                                           |
+| :----------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| `01_BCB_Data.pynb`             | Extrai e limpa os dados macroeconômicos do BCB.                                                            |
+| `02_Data_Forms.pynb`           | Realiza a limpeza (`Sim`/`Não`, padronização de texto) e gera as análises e gráficos do formulário.        |
+| `03_estruturar_base_dados.py`  | **Cria a Base Estruturada** (modulariza o `df_limpo` em tabelas) e salva o entregável final.               |
 
 ---
 
@@ -71,13 +115,13 @@ O que queremos entregar e ensinar:
 
 Agradecemos a dedicação e o esforço de todos os membros da equipe que tornaram este projeto possível.
 
-| Membro                              | Função             | GitHub                                                |
-| :---------------------------------- | :----------------- | :---------------------------------------------------- |
-| **Bruno de Lima Marques**           | Gerente de Projeto | [`bruno.lmars`](https://github.com/bruno.lmars)       |
-| **Caue Muniz Anastacio**            | Pesquisador        | [`Catadordegames`](https://github.com/Catadordegames) |
-| **Davi Pereira Araújo**             | QA/Tester          | [`Ovomexid0`](https://github.com/Ovomexid0)           |
-| **joão pedro nunes gomes da silva** | Desenvolvedor      | [`joaosilva07`](https://github.com/joaosilva07)       |
-| **Luisa de Moura Zimmer**           | Designer           | [`lulumishi`](https://github.com/lulumishi)           |
+| Membro                               | Função              | GitHub                                                 |
+| :----------------------------------- | :------------------ | :----------------------------------------------------- |
+| **Bruno de Lima Marques**            | Gerente de Projeto  | [`bruno.lmars`](https://github.com/bruno.lmars)        |
+| **Caue Muniz Anastacio**             | Pesquisador         | [`Catadordegames`](https://github.com/Catadordegames)  |
+| **Davi Pereira Araújo**              | QA/Tester           | [`Ovomexid0`](https://github.com/Ovomexid0)            |
+| **joão pedro nunes gomes da silva**  | Desenvolvedor       | [`joaosilva07`](https://github.com/joaosilva07)        |
+| **Luisa de Moura Zimmer**            | Designer            | [`lulumishi`](https://github.com/lulumishi)            |
 
 ---
 
@@ -87,3 +131,5 @@ Se você tem interesse em melhorar ou expandir este projeto, sua contribuição 
 
 - Sinta-se à vontade para abrir **Issues** para relatar bugs ou sugerir novas funcionalidades.
 - Para submeter correções ou novas implementações, por favor, faça um **Pull Request**.
+
+---
