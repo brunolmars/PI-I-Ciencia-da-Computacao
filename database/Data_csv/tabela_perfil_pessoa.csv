@@ -1,0 +1,56 @@
+faixa_etaria,nivel_conhecimento,objetivo_financeiro,email,quantidade
+18 - 25,Avançado,Comprar uma casa,nan,2
+18 - 25,Avançado,Construir patrimônio,nan,4
+18 - 25,Avançado,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,2
+18 - 25,Avançado,Viver de renda,nan,4
+18 - 25,Iniciante,Comprar uma casa,camila.ferreira@gmail.com,1
+18 - 25,Iniciante,Comprar uma casa,nan,2
+18 - 25,Iniciante,Construir patrimônio,nan,5
+18 - 25,Iniciante,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,4
+18 - 25,Iniciante,Viver de renda,nan,1
+18 - 25,Intermediário,Comprar uma casa,joao.silva@gmail.com,1
+18 - 25,Intermediário,Comprar uma casa,nan,2
+18 - 25,Intermediário,Construir patrimônio,nan,5
+18 - 25,Intermediário,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,4
+18 - 25,Intermediário,Viver de renda,nan,2
+26 - 40,Avançado,Comprar uma casa,nan,4
+26 - 40,Avançado,Construir patrimônio,nan,1
+26 - 40,Avançado,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,3
+26 - 40,Avançado,Viver de renda,nan,2
+26 - 40,Iniciante,Comprar uma casa,nan,3
+26 - 40,Iniciante,Construir patrimônio,nan,2
+26 - 40,Iniciante,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",maria.oliveira@gmail.com,1
+26 - 40,Iniciante,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,2
+26 - 40,Iniciante,Viver de renda,nan,3
+26 - 40,Intermediário,Comprar uma casa,nan,5
+26 - 40,Intermediário,Construir patrimônio,nan,3
+26 - 40,Intermediário,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,5
+26 - 40,Intermediário,Viver de renda,nan,2
+41-60,Avançado,Comprar uma casa,nan,6
+41-60,Avançado,Construir patrimônio,nan,1
+41-60,Avançado,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",felipe.gomes@gmail.com,1
+41-60,Avançado,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,3
+41-60,Avançado,Viver de renda,juliana.farias@gmail.com,1
+41-60,Iniciante,Comprar uma casa,isabela.rodrigues@gmail.com,1
+41-60,Iniciante,Comprar uma casa,nan,2
+41-60,Iniciante,Construir patrimônio,nan,2
+41-60,Iniciante,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",pedro.almeida@gmail.com,1
+41-60,Iniciante,Viver de renda,nan,2
+41-60,Intermediário,Comprar uma casa,nan,3
+41-60,Intermediário,Construir patrimônio,lucas.moura@gmail.com,1
+41-60,Intermediário,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,1
+41-60,Intermediário,Viver de renda,nan,3
+60+,Avançado,Comprar uma casa,nan,1
+60+,Avançado,Construir patrimônio,nan,3
+60+,Avançado,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,5
+60+,Avançado,Viver de renda,nan,2
+60+,Iniciante,Comprar uma casa,nan,3
+60+,Iniciante,Construir patrimônio,carla.santos@gmail.com,1
+60+,Iniciante,Construir patrimônio,nan,3
+60+,Iniciante,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,2
+60+,Iniciante,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",rafael.costa@gmail.com,1
+60+,Iniciante,Viver de renda,nan,1
+60+,Intermediário,Comprar uma casa,nan,3
+60+,Intermediário,Construir patrimônio,nan,2
+60+,Intermediário,"Juntar dinheiro para uma meta de curto prazo (como viagem, carro ou troca de celular)",nan,2
+60+,Intermediário,Viver de renda,nan,5
