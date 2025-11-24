@@ -38,13 +38,15 @@ O DataFrame limpo (`df_limpo`) foi modularizado em cinco tabelas para atender ao
 
 ### 3.1. Estrutura Modular (Esquema de Tabelas)
 
-| Tabela Final              | Conteúdo                                     | Justificativa                                                                   |
-| :------------------------ | :------------------------------------------- | :------------------------------------------------------------------------------ |
-| **tabela_perfil_pessoal** | Demográficos e Nível de Conhecimento.        | Usada para segmentar o público (Ex: Nível de Conhecimento por Faixa Etária).    |
-| **tabela_comportamento**  | Hábitos e Risco (Apostas, Reserva, Decisão). | Usada para analisar tendências comportamentais e propensão ao risco.            |
-| **tabela_investimentos**  | Portfólio atual (Sim/Não para 5 classes).    | Usada para correlacionar o portfólio com o perfil e o objetivo financeiro.      |
-| **tabela_textos_livres**  | Jornada e Conselho (Textos qualitativos).    | Usada para análise de sentimento, nuvens de palavras e insights não numéricos.  |
-| **tabela_bcb_metadados**  | Séries do BCB (SELIC, IPCA, etc.).           | Usada para contextualizar a análise de risco e rentabilidade ao longo do tempo. |
+O DataFrame limpo (`df_limpo`) foi modularizado em cinco tabelas, implementando o princípio de **Single Responsibility**. Isso garante que cada tabela seja responsável por apenas um domínio de assunto, otimizando a performance e a clareza da análise.
+
+| Tabela Final              | Conteúdo                                                                                                   | Justificativa Técnica (Single Responsibility)                                                                                     |
+| :------------------------ | :--------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+| **tabela_perfil_pessoal** | Dados Demográficos (`faixa_etaria`) e Autoavaliação (`nivel_conhecimento`, `objetivo_financeiro`).         | **Foco em Segmentação:** Permite análises exclusivas sobre as características e metas do público-alvo.                            |
+| **tabela_comportamento**  | Hábitos de Risco (`participa_apostas`), Planejamento Básico (`reserva_financeira`) e Tendência de Decisão. | **Foco em Risco e Liquidez:** Usada para medir a propensão a assumir riscos e a segurança financeira básica.                      |
+| **tabela_investimentos**  | Portfólio de ativos (Respostas binárias Sim/Não para as 5 classes de investimento).                        | **Foco em Adoção de Ativos:** Otimizada para correlação e contagem de portfólio.                                                  |
+| **tabela_textos_livres**  | Respostas abertas (`jornada_financeira` e `conselho_financeiro`).                                          | **Foco em Qualitativo:** Isolada para facilitar a análise de sentimento e nuvens de palavras, sem impactar as análises numéricas. |
+| **tabela_bcb_metadados**  | Séries do BCB (SELIC, IPCA, Juros).                                                                        | **Foco em Contexto Externo:** Tabela externa, usada para contextualizar a análise de risco e rentabilidade ao longo do tempo.     |
 
 ### 3.2. Formato de Saída
 
