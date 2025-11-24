@@ -85,6 +85,14 @@ Os scripts de Python que guiam o fluxo de ETL e análise estão localizados em `
 
 ---
 
+---
+
+## 📄 Documentação Técnica e Decisões de Projeto
+
+Para uma visão detalhada das escolhas de Engenharia de Dados, o tratamento de dados faltantes, a padronização das respostas e a justificativa para a escolha das séries do Banco Central (BCB), consulte o documento de documentação técnica:
+
+➡️ **[DOCUMENTAÇÃO TÉCNICA COMPLETA](./DOCUMENTACAO_TECNICA.md)**
+
 ## ❓ A Motivação
 
 Muitas pessoas evitam investir por medo, falta de informação de qualidade ou por acreditarem em mitos financeiros. Acreditamos que a **educação financeira** é a ferramenta mais poderosa para construir um futuro seguro.
