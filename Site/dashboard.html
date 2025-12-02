@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SGEF - Sistema de Gestão e Educação Financeira</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --cor-primaria: #007bff;
+            --cor-secundaria: #6c757d;
+            --fundo-claro: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--fundo-claro);
+
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 900;
+            color: var(--cor-primaria) !important;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #343a40 !important;
+        }
+
+        .hero-title-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero-title-group h1 {
+            font-weight: 900;
+            line-height: 0.8;
+            font-size: 150px;
+            color: var(--cor-primaria);
+            margin: 0;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 10px;
+            color: var(--cor-secundaria);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--cor-primaria);
+            margin-bottom: 15px;
+        }
+    </style>
+
+    <style>
+        body {
+            background: #fafafa;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .card {
+            border-radius: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">SGEF</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar"
+                aria-controls="menuNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li>
+                        <a class="nav-link" href="#">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#recursos">Recursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contato</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline-primary me-2">Entrar</a>
+                    <a href="#" class="btn btn-primary">Cadastrar-se</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <h2 class="mb-4">Comparação Anual de Índices (2000–2023)</h2>
+
+        <div class="card p-4 shadow">
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-check">
+                        <input class="form-check-input idx" type="checkbox" value="ibov" checked>
+                        <span class="form-check-label">IBOVESPA</span>
+                    </label>
+                    <label class="form-check">
+                        <input class="form-check-input idx" type="checkbox" value="selic" checked>
+                        <span class="form-check-label">SELIC</span>
+                    </label>
+                    <label class="form-check">
+                        <input class="form-check-input idx" type="checkbox" value="ipca" checked>
+                        <span class="form-check-label">IPCA</span>
+                    </label>
+                    <label class="form-check">
+                        <input class="form-check-input idx" type="checkbox" value="fed" checked>
+                        <span class="form-check-label">Federal Funds (EUA)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div style="height: 500px; width: 100%;">
+                <canvas id="chartIndices"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0">
+                &copy; 2025 SGEF - Sistema de Gestão e Educação Financeira. Todos os
+                direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        /* ======================================================================
+           SUA API KEY DO FRED AQUI:
+           const FRED_API_KEY = "SUA_KEY";
+        ====================================================================== */
+        const FRED_API_KEY = "57b100a2d1d4386d1d4cc39c813db292";
+
+        /* ======================================================================
+           FUNÇÕES PARA BAIXAR E AGREGAR DADOS POR ANO
+        ====================================================================== */
+
+        // 1) IBOVESPA – Yahoo Finance (via CORS Proxy)
+        async function fetchIBOVAnnual() {
+            // Usando CORS proxy para evitar bloqueio do Yahoo
+            const url = "https://corsproxy.io/?https://query1.finance.yahoo.com/v8/finance/chart/%5EBVSP?range=25y&interval=1d";
+            try {
+                const r = await fetch(url);
+                const j = await r.json();
+
+                const timestamps = j.chart.result[0].timestamp;
+                const closes = j.chart.result[0].indicators.quote[0].close;
+
+                let porAno = {};
+
+                timestamps.forEach((t, i) => {
+                    const d = new Date(t * 1000);
+                    const ano = d.getFullYear();
+
+                    if (ano < 2000 || ano > 2023) return; // Filtro 2000-2023
+
+                    if (!porAno[ano]) porAno[ano] = { first: null, last: null };
+
+                    // Pega o primeiro e o último valor válido do ano
+                    if (closes[i]) {
+                        if (porAno[ano].first === null) porAno[ano].first = closes[i];
+                        porAno[ano].last = closes[i];
+                    }
+                });
+
+                // Calcula crescimento anual em %
+                return Object.entries(porAno).map(([ano, vals]) => {
+                    if (!vals.first || !vals.last) return { year: Number(ano), value: 0 };
+                    const growth = ((vals.last - vals.first) / vals.first) * 100;
+                    return { year: Number(ano), value: growth };
+                });
+            } catch (error) {
+                console.error("Erro ao buscar IBOVESPA:", error);
+                return [];
+            }
+        }
+
+        // 2) SELIC – Do arquivo CSV local
+        async function fetchSELICAnnual() {
+            const url = "../database/Data_csv/bcdata_selic_historica.csv";
+            try {
+                const r = await fetch(url);
+                const text = await r.text();
+
+                // Parse CSV: data,valor
+                const lines = text.split('\n').slice(1); // Pula header
+                let porAno = {};
+
+                lines.forEach(line => {
+                    const parts = line.split(',');
+                    if (parts.length < 2) return;
+
+                    // Formato esperado: 02/01/2023,"13,65"
+                    // Remove aspas e substitui vírgula por ponto no valor
+                    const rawDate = parts[0].trim();
+                    let rawValue = parts[1].trim().replace(/"/g, '').replace(',', '.');
+
+                    if (!rawDate || !rawValue) return;
+
+                    const [dia, mes, anoStr] = rawDate.split('/');
+                    const ano = Number(anoStr);
+                    const taxaAnual = parseFloat(rawValue);
+
+                    if (ano < 2000 || ano > 2023) return; // Filtro 2000-2023
+
+                    if (!porAno[ano]) porAno[ano] = [];
+                    porAno[ano].push(taxaAnual);
+                });
+
+                // Calcula média anual
+                return Object.entries(porAno).map(([ano, vals]) => {
+                    const media = vals.reduce((a, b) => a + b, 0) / vals.length;
+                    return {
+                        year: Number(ano),
+                        value: media
+                    };
+                });
+
+            } catch (error) {
+                console.error("Erro ao buscar SELIC do CSV:", error);
+                return [];
+            }
+        }
+
+        // 3) IPCA mensal – BCB (SGS 433) → acumulado anual
+        async function fetchIPCAAnnual() {
+            const url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2000";
+            try {
+                const r = await fetch(url);
+                const data = await r.json();
+
+                let porAno = {};
+                data.forEach(d => {
+                    const [dia, mes, anoStr] = d.data.split("/");
+                    const ano = Number(anoStr);
+                    if (ano < 2000 || ano > 2023) return; // Filtro 2000-2023
+
+                    const taxaMensal = parseFloat(d.valor) / 100;
+
+                    // Acumula: (1 + taxa) * ...
+                    porAno[ano] = (porAno[ano] || 1) * (1 + taxaMensal);
+                });
+
+                return Object.entries(porAno).map(([year, val]) => ({
+                    year: Number(year),
+                    value: (val - 1) * 100 // Converte fator para %
+                }));
+            } catch (error) {
+                console.error("Erro ao buscar IPCA:", error);
+                return [];
+            }
+        }
+
+        // 4) FED Funds – FRED → média anual (mantendo lógica existente, ajustando filtro)
+        async function fetchFEDAnnual() {
+            if (!FRED_API_KEY) return [];
+
+            // Usando CORS proxy para evitar bloqueio
+            const targetUrl = `https://api.stlouisfed.org/fred/series/observations?series_id=FEDFUNDS&api_key=${FRED_API_KEY}&file_type=json&observation_start=2000-01-01`;
+            const url = "https://corsproxy.io/?" + encodeURIComponent(targetUrl);
+            try {
+                const r = await fetch(url);
+                const j = await r.json();
+
+                let porAno = {};
+
+                j.observations.forEach(obs => {
+                    const ano = Number(obs.date.slice(0, 4));
+                    if (ano < 2000 || ano > 2023) return; // Filtro 2000-2023
+
+                    const v = parseFloat(obs.value);
+                    if (!isNaN(v)) {
+                        porAno[ano] = (porAno[ano] || []);
+                        porAno[ano].push(v);
+                    }
+                });
+
+                return Object.entries(porAno).map(([year, vals]) => ({
+                    year: Number(year),
+                    value: vals.reduce((a, b) => a + b, 0) / vals.length
+                }));
+            } catch (error) {
+                console.error("Erro ao buscar FED Funds:", error);
+                return [];
+            }
+        }
+
+        /* ======================================================================
+           CRIAR GRÁFICO
+        ====================================================================== */
+        async function loadChart() {
+            const [ibov, selic, ipca, fed] = await Promise.all([
+                fetchIBOVAnnual(),
+                fetchSELICAnnual(),
+                fetchIPCAAnnual(),
+                fetchFEDAnnual()
+            ]);
+
+            // Ordena os dados por ano para garantir alinhamento
+            const sortData = (data) => data.sort((a, b) => a.year - b.year);
+
+            const ibovSorted = sortData(ibov);
+            const selicSorted = sortData(selic);
+            const ipcaSorted = sortData(ipca);
+            const fedSorted = sortData(fed);
+
+            // Cria lista de anos (eixo X) baseada no range 2000-2023
+            const years = [];
+            for (let y = 2000; y <= 2023; y++) years.push(y);
+
+            // Função auxiliar para mapear valores para os anos
+            const mapValues = (data) => years.map(y => {
+                const item = data.find(d => d.year === y);
+                return item ? item.value : null; // null para gaps
+            });
+
+            const ctx = document.getElementById("chartIndices");
+            const chart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: years,
+                    datasets: [
+                        {
+                            label: "IBOVESPA (Crescimento %)",
+                            data: mapValues(ibovSorted),
+                            borderColor: "blue",
+                            backgroundColor: "blue",
+                            borderWidth: 2
+                        },
+                        {
+                            label: "SELIC (Média %)",
+                            data: mapValues(selicSorted),
+                            borderColor: "green",
+                            backgroundColor: "green",
+                            borderWidth: 2
+                        },
+                        {
+                            label: "IPCA (Acumulado %)",
+                            data: mapValues(ipcaSorted),
+                            borderColor: "red",
+                            backgroundColor: "red",
+                            borderWidth: 2
+                        },
+                        {
+                            label: "FED Funds (Média %)",
+                            data: mapValues(fedSorted),
+                            borderColor: "orange",
+                            backgroundColor: "orange",
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Porcentagem (%)'
+                            },
+                            ticks: {
+                                callback: function (value) {
+                                    return value + "%";
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2) + "%";
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // checkboxes para ligar/desligar
+            document.querySelectorAll(".idx").forEach((chk, i) => {
+                chk.addEventListener("change", () => {
+                    chart.data.datasets[i].hidden = !chk.checked;
+                    chart.update();
+                });
+            });
+        }
+
+        loadChart();
+    </script>
+
+</body>
+
+</html>
