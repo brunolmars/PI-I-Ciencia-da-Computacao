@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Indicadores Financeiros Nacionais - SGEF</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      :root {
+        --cor-primaria: #0d6efd;
+        --cor-fundo: #f8f9fa;
+        --cor-card: #ffffff;
+        --cor-texto: #212529;
+      }
+      body {
+        background-color: var(--cor-fundo);
+        color: var(--cor-texto);
+      }
+      .sidebar {
+        min-height: 100vh;
+        background-color: var(--cor-card);
+        border-right: 1px solid #dee2e6;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      }
+      .sidebar .nav-link {
+        color: var(--cor-texto) !important;
+      }
+      .sidebar .nav-link.active {
+        background-color: var(--cor-primaria) !important;
+        color: white !important;
+      }
+      .card {
+        background-color: var(--cor-card);
+        color: var(--cor-texto);
+        border-radius: 12px;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      }
+      .kpi-card-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--cor-primaria);
+      }
+      .kpi-card-title {
+        font-size: 0.9rem;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d-flex">
+      <div class="sidebar p-4 d-flex flex-column" style="width: 280px">
+        <h3 class="mb-4 text-dark">📊 SGEF - Indicadores</h3>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="nav-item mb-2">
+            <a href="#" class="nav-link active" aria-current="page">
+              <i class="bi bi-bank me-2"></i>
+              Nacional
+            </a>
+          </li>
+          <li class="nav-item mb-2">
+            <a href="#" class="nav-link">
+              <i class="bi bi-graph-up me-2"></i>
+              Mercado de Ações
+            </a>
+          </li>
+          <li class="nav-item mb-2">
+            <a href="#" class="nav-link">
+              <i class="bi bi-cash me-2"></i>
+              Taxas de Câmbio
+            </a>
+          </li>
+        </ul>
+        <hr class="text-secondary" />
+        <div class="dropdown">
+          <a
+            href="#"
+            class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
+            id="dropdownUser1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="https://via.placeholder.com/32/AAAAAA/000000?text=S"
+              alt="Perfil"
+              width="32"
+              height="32"
+              class="rounded-circle me-2"
+            />
+            <strong>SGEF User</strong>
+          </a>
+          <ul
+            class="dropdown-menu text-small shadow"
+            aria-labelledby="dropdownUser1"
+          >
+            <li><a class="dropdown-item" href="#">Configurações</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="#">Sair</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="content flex-grow-1 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="fw-bold fs-3">Indicadores Macroeconômicos (Brasil)</h1>
+          <span class="text-secondary">Fonte: BCB e IpeaData </span>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-4 mb-3">
+            <div class="card p-3 h-100">
+              <div class="kpi-card-title">Taxa Selic (Meta)</div>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="kpi-card-value">15%</span>
+                <i class="bi bi-caret-down-fill text-danger fs-3"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="card p-3 h-100">
+              <div class="kpi-card-title">Juros do Cartão (Rotativo)</div>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="kpi-card-value">439.8%</span>
+                <i class="bi bi-caret-up-fill text-danger fs-3"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="card p-3 h-100">
+              <div class="kpi-card-title">Inadimplência (90 dias +)</div>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="kpi-card-value text-danger">43%</span>
+                <i class="bi bi-graph-up-arrow text-danger fs-3"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-8 mb-4">
+            <div class="card p-4">
+              <h4 class="mb-3 fs-5">
+                Tendência Histórica da Taxa Selic (Últimos 12 meses)
+              </h4>
+              <canvas id="selicChart" style="max-height: 350px"></canvas>
+            </div>
+          </div>
+
+          <div class="col-lg-4 mb-4">
+            <div class="card p-4 h-100">
+              <h4 class="mb-3 fs-5">Distribuição da Dívida das Famílias</h4>
+              <canvas id="dividaChart" style="max-height: 350px"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 mb-4">
+            <div class="card p-4 h-100">
+              <h4 class="mb-3 fs-5">
+                Taxa de Inflação (IPCA - Últimos 6 meses)
+              </h4>
+              <canvas id="ipcaChart" style="max-height: 300px"></canvas>
+            </div>
+          </div>
+
+          <div class="col-lg-6 mb-4">
+            <div class="card p-4 h-100">
+              <h4 class="mb-3 fs-5">Cotações Internacionais Chave</h4>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Ativo</th>
+                    <th>Valor</th>
+                    <th>Variação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Dólar PTAX</td>
+                    <td>R$ 5.35</td>
+                    <td><span class="text-danger">-0.15%</span></td>
+                  </tr>
+                  <tr>
+                    <td>Euro</td>
+                    <td>R$ 5.92</td>
+                    <td><span class="text-success">+0.05%</span></td>
+                  </tr>
+                  <tr>
+                    <td>Ouro (Gram)</td>
+                    <td>R$ 385.00</td>
+                    <td><span class="text-success">+1.25%</span></td>
+                  </tr>
+                  <tr>
+                    <td>Bitcoin</td>
+                    <td>R$ 325,000</td>
+                    <td><span class="text-danger">-2.50%</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="bg-light text-dark py-4 mt-auto border-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="fw-bold mb-1">Fontes de Dados do Dashboard:</p>
+            <ul class="list-unstyled small text-secondary">
+              <li>
+                <i class="bi bi-link-45deg me-2"></i>Taxa Selic e Juros: Banco
+                Central do Brasil (BCB).
+              </li>
+              <li>
+                <i class="bi bi-link-45deg me-2"></i>Inflação (IPCA): Instituto
+                Brasileiro de Geografia e Estatística (IBGE).
+              </li>
+              <li>
+                <i class="bi bi-link-45deg me-2"></i>Indicadores de Dívida e
+                Câmbio: IpeaData e B3.
+              </li>
+              <li>
+                <i class="bi bi-link-45deg me-2"></i>*Todos os dados exibidos
+                são atualizados des de junho de 2025.
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p class="mb-1 fw-bold">
+              SGEF - Sistema de Gestão e Educação Financeira
+            </p>
+            <p class="small text-secondary">
+              &copy; 2025 SGEF. Todos os direitos reservados.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const ctx1 = document.getElementById("selicChart").getContext("2d");
+      new Chart(ctx1, {
+        type: "line",
+        data: {
+          labels: [
+            "Dez/14",
+            "Dez/15",
+            "Dez/16",
+            "Dez/17",
+            "Dez/18",
+            "Dez/19",
+            "Dez/20",
+            "Dez/21",
+            "Dez/22",
+            "Dez/23",
+            "Dez/24",
+            "Dez/25",
+          ],
+          datasets: [
+            {
+              label: "Taxa Selic",
+              data: [
+                11.75, 11.25, 10.75, 10.5, 10.5, 10.75, 11.25, 12.25, 13.25,
+                14.25, 14.75, 15,
+              ],
+              borderColor: "rgb(13, 110, 253)",
+              backgroundColor: "rgba(13, 110, 253, 0.2)",
+              fill: true,
+              tension: 0.3,
+              pointRadius: 4,
+              pointBackgroundColor: "rgb(13, 110, 253)",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { grid: { display: false } },
+            y: {
+              beginAtZero: false,
+              title: { display: true, text: "Taxa (%)" },
+            },
+          },
+          plugins: {
+            legend: { display: false },
+          },
+        },
+      });
+
+      const ctx2 = document.getElementById("dividaChart").getContext("2d");
+      new Chart(ctx2, {
+        type: "doughnut",
+        data: {
+          labels: [
+            "Crédito Imobiliário",
+            "Crédito Consignado",
+            "Cartão de Crédito",
+            "Outros",
+          ],
+          datasets: [
+            {
+              data: [40, 35, 15, 10],
+              backgroundColor: ["#0d6efd", "#20c997", "#dc3545", "#ffc107"], // Azul, Verde, Vermelho, Amarelo
+              hoverOffset: 8,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      });
+
+      const ctx3 = document.getElementById("ipcaChart").getContext("2d");
+      new Chart(ctx3, {
+        type: "bar",
+        data: {
+          labels: ["Jun", "mai", "abr", "mar", "fev", "jan"],
+          datasets: [
+            {
+              label: "IPCA Mensal",
+              data: [5.35, 5.32, 5.53, 5.48, 5.06, 4.56],
+              backgroundColor: "#0d6efd",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { grid: { display: false } },
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Variação (%)" },
+            },
+          },
+          plugins: {
+            legend: { display: false },
+          },
+        },
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

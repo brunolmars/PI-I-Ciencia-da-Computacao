@@ -1,0 +1,13 @@
+faixa_etaria,nivel_conhecimento,quantidade
+18 - 25,Avançado,12
+18 - 25,Iniciante,13
+18 - 25,Intermediário,14
+26 - 40,Avançado,10
+26 - 40,Iniciante,11
+26 - 40,Intermediário,15
+41-60,Avançado,12
+41-60,Iniciante,8
+41-60,Intermediário,8
+60+,Avançado,11
+60+,Iniciante,11
+60+,Intermediário,12
