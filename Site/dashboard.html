@@ -3,14 +3,74 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Comparação Anual de Índices</title>
+    <title>SGEF - Sistema de Gestão e Educação Financeira</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --cor-primaria: #007bff;
+            --cor-secundaria: #6c757d;
+            --fundo-claro: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--fundo-claro);
+
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 900;
+            color: var(--cor-primaria) !important;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #343a40 !important;
+        }
+
+        .hero-title-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero-title-group h1 {
+            font-weight: 900;
+            line-height: 0.8;
+            font-size: 150px;
+            color: var(--cor-primaria);
+            margin: 0;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 10px;
+            color: var(--cor-secundaria);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--cor-primaria);
+            margin-bottom: 15px;
+        }
+    </style>
 
     <style>
         body {
             background: #fafafa;
             font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .card {
@@ -20,6 +80,35 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">SGEF</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar"
+                aria-controls="menuNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li>
+                        <a class="nav-link" href="#">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#recursos">Recursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contato</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline-primary me-2">Entrar</a>
+                    <a href="#" class="btn btn-primary">Cadastrar-se</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="container py-4">
         <h2 class="mb-4">Comparação Anual de Índices (2000–2023)</h2>
@@ -46,9 +135,20 @@
                 </div>
             </div>
 
-            <canvas id="chartIndices" height="120"></canvas>
+            <div style="height: 500px; width: 100%;">
+                <canvas id="chartIndices"></canvas>
+            </div>
         </div>
     </div>
+
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0">
+                &copy; 2025 SGEF - Sistema de Gestão e Educação Financeira. Todos os
+                direitos reservados.
+            </p>
+        </div>
+    </footer>
 
     <script>
         /* ======================================================================
@@ -103,7 +203,7 @@
 
         // 2) SELIC – Do arquivo CSV local
         async function fetchSELICAnnual() {
-            const url = "../database/Data_csv/bcdata selic historica.csv";
+            const url = "../database/Data_csv/bcdata_selic_historica.csv";
             try {
                 const r = await fetch(url);
                 const text = await r.text();
@@ -129,20 +229,18 @@
 
                     if (ano < 2000 || ano > 2023) return; // Filtro 2000-2023
 
-                    // Acumulado anual: Produtório de (1 + taxa_diaria)
-                    // Taxa diária aproximada = (1 + taxa_anual/100)^(1/252) - 1
-                    // Fator diário = (1 + taxa_anual/100)^(1/252)
-
-                    const fatorDiario = Math.pow(1 + taxaAnual / 100, 1 / 252);
-
-                    if (!porAno[ano]) porAno[ano] = 1;
-                    porAno[ano] *= fatorDiario;
+                    if (!porAno[ano]) porAno[ano] = [];
+                    porAno[ano].push(taxaAnual);
                 });
 
-                return Object.entries(porAno).map(([ano, acumulado]) => ({
-                    year: Number(ano),
-                    value: (acumulado - 1) * 100 // Converte fator acumulado para %
-                }));
+                // Calcula média anual
+                return Object.entries(porAno).map(([ano, vals]) => {
+                    const media = vals.reduce((a, b) => a + b, 0) / vals.length;
+                    return {
+                        year: Number(ano),
+                        value: media
+                    };
+                });
 
             } catch (error) {
                 console.error("Erro ao buscar SELIC do CSV:", error);
@@ -183,7 +281,9 @@
         async function fetchFEDAnnual() {
             if (!FRED_API_KEY) return [];
 
-            const url = `https://api.stlouisfed.org/fred/series/observations?series_id=FEDFUNDS&api_key=${FRED_API_KEY}&file_type=json&observation_start=2000-01-01`;
+            // Usando CORS proxy para evitar bloqueio
+            const targetUrl = `https://api.stlouisfed.org/fred/series/observations?series_id=FEDFUNDS&api_key=${FRED_API_KEY}&file_type=json&observation_start=2000-01-01`;
+            const url = "https://corsproxy.io/?" + encodeURIComponent(targetUrl);
             try {
                 const r = await fetch(url);
                 const j = await r.json();
@@ -254,7 +354,7 @@
                             borderWidth: 2
                         },
                         {
-                            label: "SELIC (Acumulado %)",
+                            label: "SELIC (Média %)",
                             data: mapValues(selicSorted),
                             borderColor: "green",
                             backgroundColor: "green",
@@ -278,6 +378,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             title: {
