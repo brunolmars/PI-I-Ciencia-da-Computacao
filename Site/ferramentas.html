@@ -192,9 +192,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-      /* =========================================
-         LÓGICA 1: JUROS COMPOSTOS
-      ========================================= */
       let chartJuros = null;
 
       function calcularJuros() {
@@ -223,12 +220,10 @@
           }
         }
 
-        // Atualizar Textos
         document.getElementById('totalInvestido').innerText = totalInvestido.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
         document.getElementById('totalFinal').innerText = montante.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
         document.getElementById('soJuros').innerText = (montante - totalInvestido).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 
-        // Gráfico
         const ctx = document.getElementById('graficoJuros').getContext('2d');
         if (chartJuros) chartJuros.destroy();
 
@@ -262,9 +257,6 @@
         });
       }
 
-      /* =========================================
-         LÓGICA 2: ORÇAMENTO 50/30/20
-      ========================================= */
       let chartOrcamento = null;
 
       function calcularOrcamento() {
@@ -279,12 +271,10 @@
         let estilo = renda * 0.30;
         let objetivos = renda * 0.20;
 
-        // Atualiza Textos
         document.getElementById('valEssencial').innerText = essencial.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
         document.getElementById('valEstilo').innerText = estilo.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
         document.getElementById('valObjetivos').innerText = objetivos.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 
-        // Atualiza Gráfico
         const ctx2 = document.getElementById('graficoOrcamento').getContext('2d');
         if (chartOrcamento) chartOrcamento.destroy();
 
@@ -308,11 +298,10 @@
         });
       }
 
-      // Iniciar cálculo padrão ao carregar
       window.onload = function() {
         calcularJuros();
-        // Não calculamos orçamento automaticamente para esperar o input do usuário
       };
     </script>
   </body>
+
 </html>
