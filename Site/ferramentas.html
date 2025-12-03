@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SGEF - Ferramentas Financeiras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      :root { --cor-primaria: #007bff; --fundo-claro: #f8f9fa; }
+      body { background: var(--fundo-claro); font-family: "Montserrat", sans-serif; }
+      .navbar { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+      .navbar-brand { font-weight: 900; color: var(--cor-primaria) !important; letter-spacing: 1px; }
+      .nav-link { font-weight: 500; color: #343a40 !important; }
+      
+      .card { border: none; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.2s; }
+      
+      .result-box { background-color: #e7f1ff; border-radius: 12px; padding: 15px; color: #004494; text-align: center; }
+      .result-title { font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 5px; }
+      .result-value { font-size: 1.5rem; font-weight: 800; }
+
+      .section-title { border-left: 5px solid var(--cor-primaria); padding-left: 15px; margin-bottom: 30px; color: #212529; }
+    </style>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">SGEF</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuNavbar">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.html#recursos">Recursos</a></li>
+            <li class="nav-item"><a class="nav-link" href="glossario.html">Glossário</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Contato</a></li>
+            <li class="nav-item"><a class="nav-link" href="dashboard_Bruno.html">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link active" style="color: var(--cor-primaria) !important; font-weight: 700;" href="ferramentas.html">Ferramentas</a></li>
+          </ul>
+          <div class="d-flex">
+            <a href="#" class="btn btn-outline-primary me-2">Entrar</a>
+            <a href="#" class="btn btn-primary">Cadastrar-se</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container py-5">
+      <div class="text-center mb-5">
+        <h1 class="fw-bold display-5">Ferramentas Financeiras</h1>
+        <p class="text-secondary lead">Planeje seu futuro e organize seu presente.</p>
+      </div>
+      
+      <h3 class="section-title fw-bold"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Simulador de Juros Compostos</h3>
+      
+      <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+          <div class="card p-4 h-100">
+            <form id="calcForm">
+              <div class="mb-3">
+                <label class="form-label fw-bold">Valor Inicial (R$)</label>
+                <input type="number" class="form-control form-control-lg bg-light" id="valorInicial" value="1000">
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Aporte Mensal (R$)</label>
+                <input type="number" class="form-control form-control-lg bg-light" id="valorMensal" value="500">
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Taxa Anual (%)</label>
+                <input type="number" class="form-control form-control-lg bg-light" id="taxaJuros" value="10" step="0.1">
+                <div class="form-text small">Ex: 10% (Média histórica da Selic/Bolsa).</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Tempo (Anos)</label>
+                <input type="number" class="form-control form-control-lg bg-light" id="tempoAnos" value="10">
+              </div>
+              <button type="button" class="btn btn-primary w-100 btn-lg shadow-sm mt-2" onclick="calcularJuros()">
+                Calcular Futuro
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="card p-4 h-100">
+            <div class="row mb-4">
+              <div class="col-md-4 mb-2">
+                <div class="result-box">
+                  <div class="result-title">Valor Investido</div>
+                  <div class="result-value text-secondary" id="totalInvestido">R$ 0,00</div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-2">
+                <div class="result-box" style="background-color: #fff3cd; color: #856404;">
+                  <div class="result-title">Juros Ganhos</div>
+                  <div class="result-value" id="soJuros">R$ 0,00</div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-2">
+                <div class="result-box" style="background-color: #d1e7dd; color: #0f5132;">
+                  <div class="result-title">Total Final</div>
+                  <div class="result-value" id="totalFinal">R$ 0,00</div>
+                </div>
+              </div>
+            </div>
+            <div style="height: 300px; width: 100%;">
+              <canvas id="graficoJuros"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-5 text-secondary">
+
+      <h3 class="section-title fw-bold"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Organizador de Orçamento (Regra 50/30/20)</h3>
+      <p class="text-secondary mb-4">Descubra quanto você deveria gastar em cada área da sua vida com base na sua renda líquida.</p>
+
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="card p-4 h-100 bg-primary text-white">
+            <h4 class="mb-4">Sua Renda</h4>
+            <div class="mb-4">
+              <label class="form-label fw-bold">Qual seu salário líquido mensal?</label>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text border-0">R$</span>
+                <input type="number" class="form-control border-0" id="rendaLiquida" placeholder="Ex: 3000">
+              </div>
+            </div>
+            <button class="btn btn-light w-100 btn-lg text-primary fw-bold" onclick="calcularOrcamento()">
+              Organizar Meu Dinheiro
+            </button>
+            <p class="mt-4 small opacity-75">
+              <i class="bi bi-info-circle me-1"></i> A regra 50/30/20 é um guia ideal para o equilíbrio financeiro.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card p-3 mb-3 border-start border-5 border-primary">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="fw-bold text-primary mb-1">50% - Essenciais</h6>
+                <small class="text-muted">Aluguel, Conta de Luz, Mercado</small>
+              </div>
+              <h4 class="fw-bold mb-0" id="valEssencial">R$ 0</h4>
+            </div>
+          </div>
+
+          <div class="card p-3 mb-3 border-start border-5 border-info">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="fw-bold text-info mb-1">30% - Estilo de Vida</h6>
+                <small class="text-muted">Lazer, Restaurantes, Assinaturas</small>
+              </div>
+              <h4 class="fw-bold mb-0" id="valEstilo">R$ 0</h4>
+            </div>
+          </div>
+
+          <div class="card p-3 border-start border-5 border-success">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="fw-bold text-success mb-1">20% - Objetivos</h6>
+                <small class="text-muted">Investimentos, Dívidas, Reserva</small>
+              </div>
+              <h4 class="fw-bold mb-0" id="valObjetivos">R$ 0</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card p-4 h-100 d-flex align-items-center justify-content-center">
+            <div style="height: 250px; width: 100%;">
+              <canvas id="graficoOrcamento"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+          <p class="mb-0 small">&copy; 2025 SGEF. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      /* =========================================
+         LÓGICA 1: JUROS COMPOSTOS
+      ========================================= */
+      let chartJuros = null;
+
+      function calcularJuros() {
+        let vInicial = parseFloat(document.getElementById('valorInicial').value) || 0;
+        let vMensal = parseFloat(document.getElementById('valorMensal').value) || 0;
+        let taxaAnual = parseFloat(document.getElementById('taxaJuros').value) || 0;
+        let anos = parseInt(document.getElementById('tempoAnos').value) || 0;
+
+        let taxaMensal = (Math.pow((1 + taxaAnual / 100), (1 / 12))) - 1;
+        let meses = anos * 12;
+
+        let totalInvestido = vInicial;
+        let montante = vInicial;
+        let labels = [];
+        let dataMontante = [];
+        let dataInvestido = [];
+
+        for (let i = 1; i <= meses; i++) {
+          montante = montante * (1 + taxaMensal) + vMensal;
+          totalInvestido += vMensal;
+
+          if (i % 12 === 0 || i === meses) { // Pontos anuais
+            labels.push(Math.round(i / 12) + " Ano(s)");
+            dataMontante.push(montante.toFixed(2));
+            dataInvestido.push(totalInvestido.toFixed(2));
+          }
+        }
+
+        // Atualizar Textos
+        document.getElementById('totalInvestido').innerText = totalInvestido.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('totalFinal').innerText = montante.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('soJuros').innerText = (montante - totalInvestido).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+
+        // Gráfico
+        const ctx = document.getElementById('graficoJuros').getContext('2d');
+        if (chartJuros) chartJuros.destroy();
+
+        chartJuros = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Patrimônio Total',
+                data: dataMontante,
+                borderColor: '#198754',
+                backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                fill: true,
+                tension: 0.3
+              },
+              {
+                label: 'Dinheiro Investido',
+                data: dataInvestido,
+                borderColor: '#0d6efd',
+                borderDash: [5, 5],
+                tension: 0.3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      /* =========================================
+         LÓGICA 2: ORÇAMENTO 50/30/20
+      ========================================= */
+      let chartOrcamento = null;
+
+      function calcularOrcamento() {
+        let renda = parseFloat(document.getElementById('rendaLiquida').value);
+        
+        if (!renda || renda <= 0) {
+          alert("Por favor, digite um valor válido para a renda.");
+          return;
+        }
+
+        let essencial = renda * 0.50;
+        let estilo = renda * 0.30;
+        let objetivos = renda * 0.20;
+
+        // Atualiza Textos
+        document.getElementById('valEssencial').innerText = essencial.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('valEstilo').innerText = estilo.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('valObjetivos').innerText = objetivos.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+
+        // Atualiza Gráfico
+        const ctx2 = document.getElementById('graficoOrcamento').getContext('2d');
+        if (chartOrcamento) chartOrcamento.destroy();
+
+        chartOrcamento = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: ['Essenciais (50%)', 'Estilo de Vida (30%)', 'Objetivos (20%)'],
+            datasets: [{
+              data: [essencial, estilo, objetivos],
+              backgroundColor: ['#0d6efd', '#0dcaf0', '#198754'],
+              hoverOffset: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom' }
+            }
+          }
+        });
+      }
+
+      // Iniciar cálculo padrão ao carregar
+      window.onload = function() {
+        calcularJuros();
+        // Não calculamos orçamento automaticamente para esperar o input do usuário
+      };
+    </script>
+  </body>
+</html>
