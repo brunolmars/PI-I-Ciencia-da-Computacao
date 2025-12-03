@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGEF - Glossário Financeiro</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    
+    <style>
+        /* === ESTILOS GERAIS === */
+        :root {
+            --cor-primaria: #007bff;
+            --cor-secundaria: #6c757d;
+            --fundo-claro: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--fundo-claro);
+            font-family: "Montserrat", sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .navbar-brand { font-weight: 900; color: var(--cor-primaria) !important; letter-spacing: 1px; }
+        .nav-link { font-weight: 500; color: #343a40 !important; }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #007bff 0%, #004494 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+        }
+
+        /* Cards Interativos */
+        .termo-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 15px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+        .termo-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 30px rgba(0,123,255,0.15) !important;
+            border-bottom: 4px solid var(--cor-primaria);
+        }
+        
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 1.2rem;
+            font-size: 1.5rem;
+        }
+
+        .click-hint {
+            font-size: 0.75rem;
+            color: #ccc;
+            margin-top: 15px;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: none;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 10px;
+        }
+        .termo-card:hover .click-hint {
+            display: block;
+            color: var(--cor-primaria);
+        }
+        
+        /* Seção de FAQ */
+        .faq-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">SGEF</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menuNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#recursos">Recursos</a></li>
+                    <li class="nav-item"><a class="nav-link active" style="color: var(--cor-primaria) !important; font-weight: 700;" href="glossario.html">Glossário</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard_Bruno.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ferramentas.html">Ferramentas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contato</a></li>
+                </ul>
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline-primary me-2">Entrar</a>
+                    <a href="#" class="btn btn-primary">Cadastrar-se</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center shadow">
+        <div class="container">
+            <h1 class="fw-bold mb-3 display-5">Glossário Financeiro</h1>
+            <p class="lead mb-4 opacity-75">Clique nos cards para ver as explicações detalhadas.</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="input-group input-group-lg shadow-sm">
+                        <span class="input-group-text border-0 bg-white"><i class="bi bi-search text-primary"></i></span>
+                        <input type="text" id="searchInput" class="form-control border-0" placeholder="Pesquisar termo (ex: LCI, Selic)...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mb-5 flex-grow-1">
+        
+        <h5 class="text-secondary fw-bold mb-4 border-bottom pb-2"><i class="bi bi-graph-up-arrow me-2"></i>Indicadores Econômicos</h5>
+        <div class="row g-4 mb-5 termo-group">
+            
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card" 
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Selic (Taxa Básica)" 
+                     data-desc="A Taxa Selic é a 'mãe' de todas as taxas de juros no Brasil. Definida pelo Comitê de Política Monetária (Copom) a cada 45 dias, ela serve para controlar a inflação. \n\nPor que importa? \nQuando a Selic sobe, os investimentos de Renda Fixa (como Tesouro Selic e CDBs) pagam mais, mas os empréstimos e financiamentos ficam mais caros, desestimulando o consumo. Quando cai, estimula a economia, mas o rendimento da renda fixa diminui.">
+                    <div class="card-body">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary"><i class="bi bi-bank"></i></div>
+                        <h5 class="card-title fw-bold">Selic</h5>
+                        <p class="card-text text-secondary small">A taxa básica de juros. Define o lucro da Renda Fixa e o custo do crédito.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="IPCA (Inflação)"
+                     data-desc="O IPCA (Índice Nacional de Preços ao Consumidor Amplo) é o índice oficial da inflação no Brasil. Ele mede a variação de preços de uma cesta de produtos (comida, transporte, moradia, educação).\n\nO Perigo Invisível:\nSe você guarda dinheiro debaixo do colchão, ele perde valor. Se seu investimento rende 10% ao ano, mas o IPCA foi 10%, seu ganho real foi ZERO. O objetivo de todo investidor é superar o IPCA para aumentar seu poder de compra.">
+                    <div class="card-body">
+                        <div class="icon-box bg-danger bg-opacity-10 text-danger"><i class="bi bi-cart-x"></i></div>
+                        <h5 class="card-title fw-bold">IPCA</h5>
+                        <p class="card-text text-secondary small">Inflação oficial. O inimigo nº 1 do seu poder de compra.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="CDI (Certificado de Depósito Interbancário)"
+                     data-desc="Os bancos não podem fechar o dia com caixa negativo. Quando falta dinheiro, eles emprestam uns aos outros. A taxa média desses empréstimos é o CDI.\n\nPor que todo mundo fala disso?\nO CDI é a principal referência (Benchmark) para a Renda Fixa privada. Quando um banco digital oferece '100% do CDI', significa que ele vai te pagar exatamente a mesma taxa que os bancos cobram entre si. Historicamente, o CDI anda quase colado na Selic.">
+                    <div class="card-body">
+                        <div class="icon-box bg-info bg-opacity-10 text-info"><i class="bi bi-arrow-left-right"></i></div>
+                        <h5 class="card-title fw-bold">CDI</h5>
+                        <p class="card-text text-secondary small">A referência de rendimento dos bancos digitais e fundos.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Rentabilidade Real"
+                     data-desc="É o quanto você ganhou de verdade, descontando a inflação. \n\nExemplo Prático:\nSe sua aplicação rendeu 12% no ano, mas a inflação (IPCA) foi de 7%, sua Rentabilidade Real foi de aproximadamente 5%. Muitos investidores iniciantes se iludem com a 'Rentabilidade Nominal' (o número bruto) e esquecem que o dinheiro vale menos com o tempo.">
+                    <div class="card-body">
+                        <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-calculator"></i></div>
+                        <h5 class="card-title fw-bold">Rentabilidade Real</h5>
+                        <p class="card-text text-secondary small">O lucro verdadeiro, descontando o efeito da inflação.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="text-secondary fw-bold mb-4 border-bottom pb-2"><i class="bi bi-book me-2"></i>Conceitos Essenciais</h5>
+        <div class="row g-4 mb-5 termo-group">
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Liquidez"
+                     data-desc="Liquidez é a velocidade e facilidade com que você consegue transformar um ativo (investimento) em dinheiro disponível na sua conta.\n\nAlta Liquidez: Poupança, Tesouro Selic, CDB com liquidez diária (D+0 ou D+1). \nBaixa Liquidez: Imóveis (meses para vender), Fundos com carência (D+30, D+60). \n\nRegra: Sua Reserva de Emergência deve ter sempre Alta Liquidez.">
+                    <div class="card-body">
+                        <div class="icon-box bg-warning bg-opacity-10 text-warning"><i class="bi bi-droplet"></i></div>
+                        <h5 class="card-title fw-bold">Liquidez</h5>
+                        <p class="card-text text-secondary small">A rapidez para resgatar seu dinheiro quando precisa.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Volatilidade"
+                     data-desc="Mede a intensidade e frequência das oscilações de preço de um ativo. É o 'susto' do mercado.\n\nBaixa Volatilidade: Tesouro Selic (sobe em linha reta, devagar e sempre).\nAlta Volatilidade: Ações e Criptomoedas (sobem muito rápido, mas podem cair muito rápido também).\n\nAtenção: Volatilidade não é necessariamente ruim. É ela que permite ganhos expressivos na Bolsa, mas exige estômago e prazo longo.">
+                    <div class="card-body">
+                        <div class="icon-box bg-dark bg-opacity-10 text-dark"><i class="bi bi-activity"></i></div>
+                        <h5 class="card-title fw-bold">Volatilidade</h5>
+                        <p class="card-text text-secondary small">O quanto o preço oscila. Mais risco, mas potencial de mais retorno.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Reserva de Emergência"
+                     data-desc="O alicerce da sua vida financeira. É um dinheiro separado EXCLUSIVAMENTE para imprevistos (desemprego, doença, consertos urgentes).\n\nQuanto guardar?\nRecomenda-se de 6 a 12 meses do seu custo de vida mensal.\n\nOnde investir?\nLonge de riscos! Deve estar no Tesouro Selic ou CDB de banco grande com Liquidez Diária (100% do CDI). Nunca coloque sua reserva na Bolsa de Valores.">
+                    <div class="card-body">
+                        <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-shield-check"></i></div>
+                        <h5 class="card-title fw-bold">Reserva de Emergência</h5>
+                        <p class="card-text text-secondary small">Sua segurança obrigatória. 6 a 12 meses do custo de vida.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Juros Compostos"
+                     data-desc="Einstein teria chamado de 'a oitava maravilha do mundo'. São juros sobre juros.\n\nComo funciona?\nNo primeiro mês, você ganha juros sobre o dinheiro que investiu. No segundo mês, você ganha juros sobre o dinheiro inicial MAIS os juros do mês passado. A longo prazo (10, 20, 30 anos), isso cria uma 'bola de neve' positiva, onde o rendimento supera muito o valor que você tirou do bolso.">
+                    <div class="card-body">
+                        <div class="icon-box bg-info bg-opacity-10 text-info"><i class="bi bi-magic"></i></div>
+                        <h5 class="card-title fw-bold">Juros Compostos</h5>
+                        <p class="card-text text-secondary small">Juros sobre juros. O motor exponencial da riqueza.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Diversificação"
+                     data-desc="A única regra de ouro gratuita do mercado: 'Não coloque todos os ovos na mesma cesta'.\n\nO Conceito:\nSe você investe 100% em uma empresa e ela quebra, você perde tudo. Se você investe em 10 empresas, 5 fundos imobiliários, Renda Fixa e um pouco no exterior, a crise em um setor não destrói seu patrimônio. Diversificar reduz o risco sem necessariamente reduzir o retorno.">
+                    <div class="card-body">
+                        <div class="icon-box bg-secondary bg-opacity-10 text-secondary"><i class="bi bi-pie-chart-fill"></i></div>
+                        <h5 class="card-title fw-bold">Diversificação</h5>
+                        <p class="card-text text-secondary small">Dividir para proteger. A melhor defesa contra crises.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="text-secondary fw-bold mb-4 border-bottom pb-2"><i class="bi bi-cash-coin me-2"></i>Produtos de Investimento</h5>
+        <div class="row g-4 termo-group">
+            
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Tesouro Direto"
+                     data-desc="É a plataforma do Governo Federal para democratizar a compra de títulos públicos. Basicamente, você empresta dinheiro para o governo brasileiro.\n\nSegurança:\nÉ considerado o investimento mais seguro do país (Risco Soberano), pois o governo tem a máquina de imprimir dinheiro.\n\nTipos:\n- Tesouro Selic (Pós-fixado, para reserva)\n- Tesouro IPCA+ (Proteção contra inflação, longo prazo)\n- Tesouro Prefixado (Taxa fixa garantida se levar até o fim).">
+                    <div class="card-body">
+                        <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-piggy-bank"></i></div>
+                        <h5 class="card-title fw-bold">Tesouro Direto</h5>
+                        <p class="card-text text-secondary small">Emprestar para o governo. O investimento mais seguro do país.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="FIIs (Fundos Imobiliários)"
+                     data-desc="Quer viver de aluguel sem comprar um imóvel? Os FIIs são a solução. São fundos que captam dinheiro de milhares de investidores para comprar Shoppings, Galpões Logísticos, Prédios Comerciais ou Títulos de Dívida Imobiliária.\n\nA Vantagem:\nVocê compra uma cota (muitas custam menos de R$ 10,00) e recebe mensalmente sua parte proporcional dos aluguéis, isento de Imposto de Renda para pessoa física.">
+                    <div class="card-body">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary"><i class="bi bi-building"></i></div>
+                        <h5 class="card-title fw-bold">FIIs</h5>
+                        <p class="card-text text-secondary small">Imóveis na bolsa. Receba aluguéis mensais isentos de IR.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Ações"
+                     data-desc="Comprar uma ação significa comprar um 'pedacinho' de uma empresa real. Você se torna sócio minoritário.\n\nComo ganha dinheiro?\n1. Valorização: Você compra por R$ 10 e vende por R$ 20.\n2. Dividendos: A empresa reparte o lucro com você.\n\nÉ Renda Variável, ou seja, não há garantia de retorno e o preço muda todo dia. Exige estudo e visão de longo prazo.">
+                    <div class="card-body">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary"><i class="bi bi-graph-up"></i></div>
+                        <h5 class="card-title fw-bold">Ações</h5>
+                        <p class="card-text text-secondary small">Vire sócio das maiores empresas do Brasil (Vale, Petrobras, Itaú).</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="ETFs (Exchange Traded Funds)"
+                     data-desc="Imagine uma 'cesta' com várias ações dentro. O ETF é um fundo que é negociado na bolsa como se fosse uma ação. O objetivo dele é copiar um índice.\n\nExemplo:\nO ETF 'BOVA11' copia o índice Ibovespa. Ao comprar 1 cota de BOVA11, você está automaticamente investindo nas ~80 maiores empresas do Brasil de uma só vez. É a forma mais barata e simples de diversificar.">
+                    <div class="card-body">
+                        <div class="icon-box bg-dark bg-opacity-10 text-dark"><i class="bi bi-collection"></i></div>
+                        <h5 class="card-title fw-bold">ETFs</h5>
+                        <p class="card-text text-secondary small">Fundos de Índice. Diversifique investindo em uma 'cesta' de empresas.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="LCI e LCA"
+                     data-desc="Letra de Crédito Imobiliário (LCI) e do Agronegócio (LCA). São títulos de Renda Fixa emitidos por bancos para financiar esses dois setores estratégicos.\n\nO Grande Atrativo:\nSão ISENTOS de Imposto de Renda para pessoa física. Por isso, mesmo pagando uma taxa menor que um CDB (ex: 90% do CDI), podem render mais no bolso final porque o governo não morde nada do lucro. Têm garantia do FGC.">
+                    <div class="card-body">
+                        <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-house-door"></i></div>
+                        <h5 class="card-title fw-bold">LCI / LCA</h5>
+                        <p class="card-text text-secondary small">Renda Fixa isenta de Imposto de Renda. Foco em Imóveis e Agro.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="CDB (Certificado de Depósito Bancário)"
+                     data-desc="É o investimento mais comum de Renda Fixa privada. Você empresta dinheiro para o banco e ele te devolve com juros.\n\nSegurança:\nConta com a garantia do FGC (Fundo Garantidor de Créditos), que devolve seu dinheiro (até R$ 250 mil) se o banco quebrar.\n\nIdeal para quem está saindo da poupança e quer rentabilidade melhor com a mesma segurança (desde que escolha liquidez diária).">
+                    <div class="card-body">
+                        <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-file-earmark-lock"></i></div>
+                        <h5 class="card-title fw-bold">CDB</h5>
+                        <p class="card-text text-secondary small">Empréstimo para o banco com garantia do FGC.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Dividendos"
+                     data-desc="É a distribuição de parte do lucro líquido de uma empresa aos seus acionistas. É a verdadeira 'Renda Passiva'.\n\nEstratégia de Dividendos:\nMuitos investidores focam em comprar ações de empresas maduras (Elétricas, Bancos, Seguradoras) que não crescem tanto, mas pagam dividendos gordos e constantes. O objetivo é criar uma 'bola de neve' reinvestindo os dividendos na compra de mais ações.">
+                    <div class="card-body">
+                        <div class="icon-box bg-success bg-opacity-10 text-success"><i class="bi bi-cash-stack"></i></div>
+                        <h5 class="card-title fw-bold">Dividendos</h5>
+                        <p class="card-text text-secondary small">Sua fatia do lucro. Dinheiro caindo na conta sem esforço.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Day Trade"
+                     data-desc="Operação de curtíssimo prazo: Compra e venda do mesmo ativo no mesmo dia.\n\nRealidade:\nÉ vendido como dinheiro fácil, mas estatísticas (FGV) mostram que 97% das pessoas perdem dinheiro ou empatam. Exige dedicação integral, controle emocional de ferro e gestão de risco profissional. Não é investimento, é trabalho especulativo.">
+                    <div class="card-body">
+                        <div class="icon-box bg-warning bg-opacity-10 text-warning"><i class="bi bi-lightning-charge-fill"></i></div>
+                        <h5 class="card-title fw-bold">Day Trade</h5>
+                        <p class="card-text text-secondary small">Comprar e vender no mesmo dia. Alto risco e especulação.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 termo-card"
+                     data-bs-toggle="modal" data-bs-target="#infoModal"
+                     data-titulo="Criptomoedas"
+                     data-desc="Ativos digitais descentralizados baseados em Blockchain (como Bitcoin e Ethereum). Não dependem de governos ou bancos centrais.\n\nPerfil:\nSão extremamente voláteis. Podem subir 1000% ou cair 80% em pouco tempo. Devem ser considerados a 'pimenta' da carteira, ocupando uma porcentagem pequena (1% a 5%) do patrimônio total, devido ao alto risco.">
+                    <div class="card-body">
+                        <div class="icon-box bg-warning bg-opacity-10 text-warning"><i class="bi bi-currency-bitcoin"></i></div>
+                        <h5 class="card-title fw-bold">Criptomoedas</h5>
+                        <p class="card-text text-secondary small">Bitcoin e afins. Tecnologia disruptiva e altíssimo risco.</p>
+                        <p class="click-hint"><i class="bi bi-plus-circle me-1"></i> Ler explicação completa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section mt-5 border text-center">
+            <h4 class="fw-bold text-primary mb-3"><i class="bi bi-lightbulb-fill me-2"></i>Dica SGEF</h4>
+            <p class="lead text-secondary">
+                "O melhor momento para começar a investir foi há 10 anos. O segundo melhor momento é <strong>hoje</strong>."
+            </p>
+            <p class="small text-muted mt-2">Comece organizando suas dívidas e montando sua reserva de emergência.</p>
+        </div>
+
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0 small">
+                &copy; 2025 SGEF - Sistema de Gestão e Educação Financeira. Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-header bg-primary text-white" style="border-radius: 20px 20px 0 0;">
+                    <h4 class="modal-title fw-bold" id="modalTitulo">Título</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-5">
+                    <p id="modalDescricao" class="text-secondary fs-5" style="line-height: 1.8; white-space: pre-wrap;"></p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-outline-primary rounded-pill px-5 py-2 fw-bold" data-bs-dismiss="modal">Entendi, obrigado!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // LÓGICA DO MODAL
+        const exampleModal = document.getElementById('infoModal');
+        exampleModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const titulo = button.getAttribute('data-titulo');
+            const descricao = button.getAttribute('data-desc');
+            
+            const modalTitle = exampleModal.querySelector('.modal-title');
+            const modalBody = exampleModal.querySelector('#modalDescricao');
+
+            modalTitle.textContent = titulo;
+            modalBody.textContent = descricao;
+        });
+
+        // LÓGICA DA BUSCA
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let valor = this.value.toLowerCase();
+            // Seleciona as COLUNAS (col-md-4) que contêm um card
+            let cols = document.querySelectorAll('.col-md-4:has(.termo-card)');
+            
+            cols.forEach(function(col) {
+                let card = col.querySelector('.termo-card');
+                let texto = card.innerText.toLowerCase(); // Busca em todo o texto do card
+                let hiddenText = card.getAttribute('data-desc').toLowerCase(); // Busca também na descrição oculta
+                
+                if(texto.includes(valor) || hiddenText.includes(valor)) {
+                    col.style.display = 'block';
+                } else {
+                    col.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
