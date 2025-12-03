@@ -7,92 +7,24 @@
     <title>SGEF - Glossário Financeiro</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     
     <style>
-        /* === ESTILOS GERAIS === */
-        :root {
-            --cor-primaria: #007bff;
-            --cor-secundaria: #6c757d;
-            --fundo-claro: #f8f9fa;
-        }
-
-        body {
-            background-color: var(--fundo-claro);
-            font-family: "Montserrat", sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Navbar */
+        :root { --cor-primaria: #007bff; --cor-secundaria: #6c757d; --fundo-claro: #f8f9fa; }
+        body { background-color: var(--fundo-claro); font-family: "Montserrat", sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
         .navbar { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         .navbar-brand { font-weight: 900; color: var(--cor-primaria) !important; letter-spacing: 1px; }
         .nav-link { font-weight: 500; color: #343a40 !important; }
-
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, #007bff 0%, #004494 100%);
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 3rem;
-            border-radius: 0 0 30px 30px;
-        }
-
-        /* Cards Interativos */
-        .termo-card {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            border-radius: 15px;
-            background: white;
-            position: relative;
-            overflow: hidden;
-            height: 100%;
-        }
-        .termo-card:hover {
-            transform: translateY(-7px);
-            box-shadow: 0 15px 30px rgba(0,123,255,0.15) !important;
-            border-bottom: 4px solid var(--cor-primaria);
-        }
-        
-        .icon-box {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            margin-bottom: 1.2rem;
-            font-size: 1.5rem;
-        }
-
-        .click-hint {
-            font-size: 0.75rem;
-            color: #ccc;
-            margin-top: 15px;
-            text-transform: uppercase;
-            font-weight: bold;
-            display: none;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 10px;
-        }
-        .termo-card:hover .click-hint {
-            display: block;
-            color: var(--cor-primaria);
-        }
-        
-        /* Seção de FAQ */
-        .faq-section {
-            background-color: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
+        .hero-section { background: linear-gradient(135deg, #007bff 0%, #004494 100%); color: white; padding: 4rem 0; margin-bottom: 3rem; border-radius: 0 0 30px 30px; }
+        .termo-card { cursor: pointer; transition: all 0.3s ease; border: none; border-radius: 15px; background: white; position: relative; overflow: hidden; height: 100%; }
+        .termo-card:hover { transform: translateY(-7px); box-shadow: 0 15px 30px rgba(0,123,255,0.15) !important; border-bottom: 4px solid var(--cor-primaria); }
+        .icon-box { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; margin-bottom: 1.2rem; font-size: 1.5rem; }
+        .click-hint { font-size: 0.75rem; color: #ccc; margin-top: 15px; text-transform: uppercase; font-weight: bold; display: none; border-top: 1px solid #f0f0f0; padding-top: 10px; }
+        .termo-card:hover .click-hint { display: block; color: var(--cor-primaria); }
+        .faq-section { background-color: white; border-radius: 20px; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
     </style>
 </head>
 
@@ -100,7 +32,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">SGEF</a>
+            <a class="navbar-brand" href="index.html">SGEF</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -437,7 +369,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // LÓGICA DO MODAL
         const exampleModal = document.getElementById('infoModal');
         exampleModal.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
@@ -448,19 +379,17 @@
             const modalBody = exampleModal.querySelector('#modalDescricao');
 
             modalTitle.textContent = titulo;
-            modalBody.textContent = descricao;
+            modalBody.innerHTML = descricao.replace(/\\n/g, '<br>');
         });
 
-        // LÓGICA DA BUSCA
         document.getElementById('searchInput').addEventListener('keyup', function() {
             let valor = this.value.toLowerCase();
-            // Seleciona as COLUNAS (col-md-4) que contêm um card
             let cols = document.querySelectorAll('.col-md-4:has(.termo-card)');
             
             cols.forEach(function(col) {
                 let card = col.querySelector('.termo-card');
-                let texto = card.innerText.toLowerCase(); // Busca em todo o texto do card
-                let hiddenText = card.getAttribute('data-desc').toLowerCase(); // Busca também na descrição oculta
+                let texto = card.innerText.toLowerCase(); 
+                let hiddenText = card.getAttribute('data-desc').toLowerCase(); 
                 
                 if(texto.includes(valor) || hiddenText.includes(valor)) {
                     col.style.display = 'block';
