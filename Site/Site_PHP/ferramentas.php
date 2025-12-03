@@ -137,6 +137,12 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
         }
+
+        .input-group-text {
+            background-color: var(--cor-primaria);
+            color: white;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -153,16 +159,16 @@
             <div class="collapse navbar-collapse" id="menuNavbar">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li>
-                        <a class="nav-link" href="index.html">Início</a>
+                        <a class="nav-link" href="../index.html">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="recursos.html">Recursos</a>
+                        <a class="nav-link active" href="recursos.php">Recursos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contato.html">Contato</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                        <a class="nav-link" href="../dashboard_Bruno.html">Dashboard</a>
                     </li>
                 </ul>
 
@@ -196,20 +202,29 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="valorInicial" class="form-label">Valor Inicial (R$)</label>
-                            <input type="number" class="form-control" id="valorInicial" placeholder="1000.00"
-                                value="1000.00" step="0.01" min="0">
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="text" class="form-control currency-input" id="valorInicial"
+                                    placeholder="1.000,00" value="1.000,00">
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="aporteMensal" class="form-label">Aporte Mensal (R$)</label>
-                            <input type="number" class="form-control" id="aporteMensal" placeholder="500.00"
-                                value="500.00" step="0.01" min="0">
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="text" class="form-control currency-input" id="aporteMensal"
+                                    placeholder="500,00" value="500,00">
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="taxaJuros" class="form-label">Taxa de Juros Anual (%)</label>
-                            <input type="number" class="form-control" id="taxaJuros" placeholder="8.0" value="8"
-                                step="0.1" min="0">
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="taxaJuros" placeholder="8.0" value="8"
+                                    step="0.1" min="0">
+                                <span class="input-group-text">%</span>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -255,7 +270,7 @@
     <footer class="bg-dark text-white py-4 mt-auto">
         <div class="container text-center">
             <p class="mb-0">
-                &copy; 2025 SGEF - Sistema de Gestão e Educação Financeira. Todos os
+                &copy; <?php echo date('Y'); ?> SGEF - Sistema de Gestão e Educação Financeira. Todos os
                 direitos reservados.
             </p>
         </div>
@@ -263,23 +278,76 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Função para formatar valor como moeda brasileira
+        function formatarMoedaInput(valor) {
+            // Remove tudo que não é número
+            valor = valor.replace(/\D/g, '');
+
+            // Converte para número e divide por 100 para ter centavos
+            valor = (parseInt(valor) / 100).toFixed(2);
+
+            // Formata com separadores
+            valor = valor.replace('.', ',');
+            valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+
+            return valor;
+        }
+
+        // Função para converter moeda formatada para número
+        function moedaParaNumero(valor) {
+            if (!valor) return 0;
+            // Remove pontos de milhar e substitui vírgula por ponto
+            return parseFloat(valor.replace(/\./g, '').replace(',', '.')) || 0;
+        }
+
+        // Adiciona formatação automática aos campos de moeda
+        document.querySelectorAll('.currency-input').forEach(input => {
+            input.addEventListener('input', function (e) {
+                let valor = e.target.value;
+                e.target.value = formatarMoedaInput(valor);
+            });
+
+            input.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    calcularJurosCompostos();
+                }
+            });
+        });
+
+        // Permitir cálculo ao pressionar Enter nos outros inputs
+        document.querySelectorAll('input:not(.currency-input)').forEach(input => {
+            input.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    calcularJurosCompostos();
+                }
+            });
+        });
+
         function calcularJurosCompostos() {
             // Obter valores dos inputs
-            const valorInicial = parseFloat(document.getElementById('valorInicial').value) || 0;
-            const aporteMensal = parseFloat(document.getElementById('aporteMensal').value) || 0;
-            const taxaJurosAnual = parseFloat(document.getElementById('taxaJuros').value) || 0;
+            const valorInicial = moedaParaNumero(document.getElementById('valorInicial').value);
+            const aporteMensal = moedaParaNumero(document.getElementById('aporteMensal').value);
+            const taxaJurosAnual = parseFloat(document.getElementById('taxaJuros').value) / 100 || 0;
             const periodoAnos = parseFloat(document.getElementById('periodo').value) || 0;
 
-            // Converter taxa anual para mensal
-            const taxaMensal = taxaJurosAnual / 100 / 12;
+            // Validação
+            if (periodoAnos <= 0) {
+                alert('Por favor, insira um período válido.');
+                return;
+            }
+
+            // Converter taxa anual para mensal jm =[(1+ja)^1/12]-1
+            const taxaMensal = Math.pow(1 + taxaJurosAnual, 1 / 12) - 1;
             const periodoMeses = periodoAnos * 12;
 
             // Calcular montante final com juros compostos
             // Fórmula: M = C(1+i)^t + PMT * [((1+i)^t - 1) / i]
             let valorFinal = valorInicial * Math.pow(1 + taxaMensal, periodoMeses);
 
-            if (aporteMensal > 0) {
+            if (aporteMensal > 0 && taxaMensal > 0) {
                 valorFinal += aporteMensal * ((Math.pow(1 + taxaMensal, periodoMeses) - 1) / taxaMensal);
+            } else if (aporteMensal > 0) {
+                valorFinal += aporteMensal * periodoMeses;
             }
 
             // Calcular total investido
@@ -301,18 +369,13 @@
         function formatarMoeda(valor) {
             return valor.toLocaleString('pt-BR', {
                 style: 'currency',
-                currency: 'BRL'
+                currency: 'BRL',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
             });
         }
-
-        // Permitir cálculo ao pressionar Enter nos inputs
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') {
-                    calcularJurosCompostos();
-                }
-            });
-        });
     </script>
+
+</body>
 
 </html>

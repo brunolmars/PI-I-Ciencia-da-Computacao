@@ -103,6 +103,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="dashboard.html">Dashboard</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ferramentas.php">Ferramentas</a>
+                    </li>
                 </ul>
 
                 <div class="d-flex">
@@ -155,14 +158,14 @@
 
     <script>
         /* ======================================================================
-           SUA API KEY DO FRED AQUI:
-           const FRED_API_KEY = "SUA_KEY";
-        ====================================================================== */
+                  SUA API KEY DO FRED AQUI:
+                  const FRED_API_KEY = "SUA_KEY";
+               ====================================================================== */
         const FRED_API_KEY = "57b100a2d1d4386d1d4cc39c813db292";
 
         /* ======================================================================
-           FUNÇÕES PARA BAIXAR E AGREGAR DADOS POR ANO
-        ====================================================================== */
+                  FUNÇÕES PARA BAIXAR E AGREGAR DADOS POR ANO
+               ====================================================================== */
 
         // 1) IBOVESPA – Yahoo Finance (via CORS Proxy)
         async function fetchIBOVAnnual() {
@@ -315,8 +318,8 @@
         }
 
         /* ======================================================================
-           CRIAR GRÁFICO
-        ====================================================================== */
+                  CRIAR GRÁFICO
+               ====================================================================== */
         async function loadChart() {
             const [ibov, selic, ipca, fed] = await Promise.all([
                 fetchIBOVAnnual(),
@@ -427,5 +430,3 @@
     </script>
 
 </body>
-
-</html>
