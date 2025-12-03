@@ -4,7 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <title>SGEF - Dashboard João</title>
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -12,30 +18,24 @@
       --cor-primaria: #007bff;
       --cor-secundaria: #6c757d;
       --fundo-claro: #f8f9fa;
+      --cor-texto: #212529;
     }
 
     body {
       background-color: var(--fundo-claro);
       font-family: "Montserrat", sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    .navbar {
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar-brand {
-      font-weight: 900;
-      color: var(--cor-primaria) !important;
-      letter-spacing: 1px;
-    }
-
-    .nav-link {
-      font-weight: 500;
-      color: #343a40 !important;
-    }
+    .navbar { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    .navbar-brand { font-weight: 900; color: var(--cor-primaria) !important; letter-spacing: 1px; }
+    .nav-link { font-weight: 500; color: #343a40 !important; }
 
     .card {
       border-radius: 16px;
+      border: none;
     }
 
     .chart-card-title {
@@ -46,9 +46,10 @@
 </head>
 
 <body>
+  
   <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
     <div class="container">
-      <a class="navbar-brand" href="#">SGEF</a>
+      <a class="navbar-brand" href="index.html">SGEF</a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar"
         aria-controls="menuNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,20 +58,23 @@
 
       <div class="collapse navbar-collapse" id="menuNavbar">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li>
+          <li class="nav-item">
             <a class="nav-link" href="index.html">Início</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#recursos">Recursos</a>
+            <a class="nav-link" href="index.html#recursos">Recursos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="glossario.html">Glossário</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Contato</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="dashboard_Bruno.html">Dashboard</a>
+            <a class="nav-link active" style="color: var(--cor-primaria) !important; font-weight: 700;" href="dashboard_Bruno.html">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="ferramentas.php">Ferramentas</a>
+            <a class="nav-link" href="ferramentas.html">Ferramentas</a>
           </li>
         </ul>
 
@@ -82,32 +86,31 @@
     </div>
   </nav>
 
-  <div class="container py-4">
-    
-    <div class="alert alert-info" role="alert">
-      Estes gráficos sintetizam indicadores ligados ao acesso ao crédito, endividamento e comportamento financeiro.
-      A leitura conjunta ajuda a entender desafios e avanços da educação financeira no Brasil:
-      mais transparência (Cadastro Positivo), compreensão de custos do crédito, e gestão de dívidas (Desenrola),
-      tudo impactando a capacidade das famílias de planejar, poupar e investir de forma sustentável.
+  <div class="container py-5 flex-grow-1">
+    <h2 class="mb-3 fw-bold">Dashboard João — Gráficos CSV</h2>
+    <div class="alert alert-primary shadow-sm" role="alert">
+      <strong><i class="bi bi-info-circle me-2"></i>Sobre os Dados:</strong> Estes gráficos mostram indicadores reais de crédito e endividamento no Brasil, baseados em dados públicos. Entender esses números é fundamental para a educação financeira.
     </div>
 
     <div id="chartsContainer" class="row g-4">
-      <!-- Os cards de gráficos serão inseridos dinamicamente aqui -->
+      </div>
+    
+    <div class="text-center mt-5">
+        <a href="dashboard_Bruno.html" class="btn btn-outline-secondary">
+            ← Voltar para Visão Geral
+        </a>
     </div>
   </div>
 
   <footer class="bg-dark text-white py-4 mt-auto">
     <div class="container text-center">
-      <p class="mb-0">
-        &copy; 2025 SGEF - Sistema de Gestão e Educação Financeira. Todos os
-        direitos reservados.
+      <p class="mb-0 small">
+        &copy; 2025 SGEF - Sistema de Gestão e Educação Financeira. Todos os direitos reservados.
       </p>
     </div>
   </footer>
 
   <script>
-    // Lista de arquivos CSV na pasta ../database/csv_joao
-    // Obs.: Os formatos podem variar; o parser abaixo tenta identificar separador e coluna numérica.
     const csvFiles = [
       {
         file: "../database/csv_joao/bcdata.sgs.29038.csv",
@@ -141,7 +144,6 @@
       }
     ];
 
-    // Paleta de cores para gráficos
     const palette = [
       "#007bff",
       "#28a745",
@@ -151,9 +153,7 @@
       "#6f42c1"
     ];
 
-    // Utilitários de parsing
     function detectSeparator(line) {
-      // Tenta detectar ";" ou "," como separador principal
       const semicolonCount = (line.match(/;/g) || []).length;
       const commaCount = (line.match(/,/g) || []).length;
       return semicolonCount > commaCount ? ";" : ",";
@@ -184,7 +184,6 @@
         const parts = line.split(sep).map(s => s.trim());
         if (parts.length === 0) continue;
 
-        // Heurística: primeiro campo é label, último campo numérico
         const label = parts[0];
         let value = NaN;
 
@@ -204,17 +203,17 @@
 
     function createChartCard(container, id, title, caption) {
       const col = document.createElement('div');
-      col.className = 'col-12';
+      col.className = 'col-lg-6 col-12';
 
       const card = document.createElement('div');
-      card.className = 'card p-4 shadow';
+      card.className = 'card p-4 shadow h-100';
 
       const h = document.createElement('h5');
       h.className = 'chart-card-title mb-3';
       h.textContent = title;
 
       const canvasWrap = document.createElement('div');
-      canvasWrap.style.height = '420px';
+      canvasWrap.style.height = '300px';
 
       const canvas = document.createElement('canvas');
       canvas.id = id;
@@ -223,7 +222,7 @@
       const small = document.createElement('small');
       small.className = 'text-muted mt-3';
       small.style.display = 'block';
-      small.textContent = caption || 'Valores conforme arquivo CSV. Eixo X: rótulos; Eixo Y: valores numéricos.';
+      small.textContent = caption || 'Valores conforme arquivo CSV.';
 
       card.appendChild(h);
       card.appendChild(canvasWrap);
@@ -240,12 +239,12 @@
         const cfg = csvFiles[i];
         const chartId = `chart_${i}`;
         const captions = {
-          "BCB Série 29038": "Série 29038 do BCB. Eixo X: data/competência; Eixo Y: valor da série (unidade conforme CSV). Fonte: BCB/SGS. Relevância: oscilações de indicadores macro (juros/atividade) impactam o custo do crédito e a necessidade de educação financeira para planejamento e proteção contra ciclos econômicos.",
-          "Cadastro Positivo — Empréstimo Pessoal (Mar/2025)": "Cadastro Positivo para empréstimo pessoal. Eixo X: categoria/segmento; Eixo Y: quantidade ou índice conforme CSV. Relevância: histórico de pagamentos melhora a avaliação de risco, possibilitando juros mais justos para quem tem boa disciplina financeira, incentivando práticas saudáveis de crédito.",
-          "Cartão de Crédito — Cadastro Positivo (Mar/2025)": "Cadastro Positivo para cartão de crédito. Eixo X: categoria/segmento; Eixo Y: quantidade ou índice conforme CSV. Relevância: uso consciente de cartão (controle de limite, pagamento total) reduz inadimplência; educação financeira orienta sobre juros rotativos e planejamento de despesas.",
-          "Programa Desenrola — Dados": "Dados do Programa Desenrola. Eixo X: período ou categoria; Eixo Y: valor agregado (ex.: número de acordos, montante). Relevância: renegociação de dívidas cria oportunidade para reorganizar o orçamento; educação financeira é crucial para evitar reincidência e construir reserva.",
-          "Demanda dos Consumidores por Crédito (Ago/2025)": "Demanda por crédito. Eixo X: categoria/período; Eixo Y: índice ou volume (ver CSV). Relevância: aumento da demanda sem educação financeira pode elevar endividamento; com orientação, o crédito vira ferramenta de alavancagem responsável (estudos, negócios, bens duráveis).",
-          "Devedores — Dívida Ativa (Dez/2023)": "Devedores em dívida ativa. Eixo X: categoria/período; Eixo Y: quantidade ou valor total (ver CSV). Relevância: entender obrigações tributárias e consequências do não pagamento faz parte da educação financeira cidadã, reduzindo penalidades e restrições futuras."
+          "BCB Série 29038": "Impacto dos indicadores macro no custo do crédito.",
+          "Cadastro Positivo — Empréstimo Pessoal (Mar/2025)": "Histórico de pagamentos melhora a avaliação de risco.",
+          "Cartão de Crédito — Cadastro Positivo (Mar/2025)": "Uso consciente do crédito reduz inadimplência.",
+          "Programa Desenrola — Dados": "Renegociação de dívidas como oportunidade de recomeço.",
+          "Demanda dos Consumidores por Crédito (Ago/2025)": "Aumento da demanda exige maior educação financeira.",
+          "Devedores — Dívida Ativa (Dez/2023)": "Consequências legais e financeiras da inadimplência."
         };
         createChartCard(container, chartId, cfg.title, captions[cfg.title]);
 
@@ -272,42 +271,20 @@
               responsive: true,
               maintainAspectRatio: false,
               plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: function (context) {
-                      let label = context.dataset.label || '';
-                      if (label) label += ': ';
-                      if (context.parsed.y !== null) {
-                        const v = context.parsed.y;
-                        const fmt = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
-                        return label + fmt.format(v);
-                      }
-                      return label;
-                    }
-                  }
-                },
-                legend: { display: true }
+                legend: { display: false }
               },
               scales: {
                 y: {
-                  title: { display: true, text: 'Valor (unidade conforme CSV)' },
-                  ticks: {
-                    callback: function (value) {
-                      return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 }).format(value);
-                    }
-                  }
+                  beginAtZero: true
                 },
                 x: {
-                  title: { display: true, text: 'Rótulos (datas/categorias)' }
+                  display: false
                 }
               }
             }
           }));
         } catch (err) {
-          const alert = document.createElement('div');
-          alert.className = 'alert alert-warning';
-          alert.textContent = `Não foi possível carregar ${cfg.title}: ${err.message}`;
-          container.appendChild(alert);
+          console.log(`Erro ao carregar ${cfg.title}: ${err.message}`);
         }
       }
     }
@@ -315,5 +292,6 @@
     window.addEventListener('DOMContentLoaded', renderCSVCharts);
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
+</html>
