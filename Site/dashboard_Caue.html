@@ -17,9 +17,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* === ESTILOS PADRÃO DO PROJETO === */
         :root {
-            --cor-primaria: #007bff; /* Azul SGEF */
+            --cor-primaria: #007bff;
             --cor-secundaria: #6c757d;
             --fundo-claro: #f8f9fa;
             --cor-texto: #212529;
@@ -33,7 +32,6 @@
             min-height: 100vh;
         }
 
-        /* Navbar */
         .navbar { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         
         .navbar-brand { 
@@ -141,18 +139,9 @@
     </footer>
 
     <script>
-        /* ======================================================================
-                  SUA API KEY DO FRED AQUI:
-               ====================================================================== */
         const FRED_API_KEY = "57b100a2d1d4386d1d4cc39c813db292";
 
-        /* ======================================================================
-                  FUNÇÕES PARA BAIXAR E AGREGAR DADOS POR ANO
-               ====================================================================== */
-
-        // 1) IBOVESPA – Yahoo Finance (via CORS Proxy)
         async function fetchIBOVAnnual() {
-            // Usando CORS proxy para evitar bloqueio do Yahoo
             const url = "https://corsproxy.io/?https://query1.finance.yahoo.com/v8/finance/chart/%5EBVSP?range=25y&interval=1d";
             try {
                 const r = await fetch(url);
@@ -167,18 +156,16 @@
                     const d = new Date(t * 1000);
                     const ano = d.getFullYear();
 
-                    if (ano < 2000 || ano > 2023) return; // Filtro 2000-2023
+                    if (ano < 2000 || ano > 2023) return;
 
                     if (!porAno[ano]) porAno[ano] = { first: null, last: null };
 
-                    // Pega o primeiro e o último valor válido do ano
                     if (closes[i]) {
                         if (porAno[ano].first === null) porAno[ano].first = closes[i];
                         porAno[ano].last = closes[i];
                     }
                 });
 
-                // Calcula crescimento anual em %
                 return Object.entries(porAno).map(([ano, vals]) => {
                     if (!vals.first || !vals.last) return { year: Number(ano), value: 0 };
                     const growth = ((vals.last - vals.first) / vals.first) * 100;
@@ -190,17 +177,14 @@
             }
         }
 
-        // 2) SELIC – Do arquivo CSV local (CAMINHO AJUSTADO)
         async function fetchSELICAnnual() {
-            // ATENÇÃO: Ajuste o caminho se a pasta database estiver em outro lugar
             const url = "../database/Data_csv/bcdata_selic_historica.csv";
             try {
                 const r = await fetch(url);
                 if (!r.ok) throw new Error("Arquivo CSV não encontrado");
                 const text = await r.text();
 
-                // Parse CSV: data,valor
-                const lines = text.split('\n').slice(1); // Pula header
+                const lines = text.split('\n').slice(1);
                 let porAno = {};
 
                 lines.forEach(line => {
@@ -236,7 +220,6 @@
             }
         }
 
-        // 3) IPCA mensal – BCB (SGS 433) → acumulado anual
         async function fetchIPCAAnnual() {
             const url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2000";
             try {
@@ -263,7 +246,6 @@
             }
         }
 
-        // 4) FED Funds – FRED → média anual
         async function fetchFEDAnnual() {
             if (!FRED_API_KEY) return [];
 
@@ -296,9 +278,6 @@
             }
         }
 
-        /* ======================================================================
-                  CRIAR GRÁFICO
-               ====================================================================== */
         async function loadChart() {
             const [ibov, selic, ipca, fed] = await Promise.all([
                 fetchIBOVAnnual(),
@@ -331,7 +310,7 @@
                         {
                             label: "IBOVESPA (Crescimento %)",
                             data: mapValues(ibovSorted),
-                            borderColor: "#0d6efd", // Azul Primary
+                            borderColor: "#0d6efd",
                             backgroundColor: "#0d6efd",
                             borderWidth: 2,
                             tension: 0.3
@@ -339,7 +318,7 @@
                         {
                             label: "SELIC (Média %)",
                             data: mapValues(selicSorted),
-                            borderColor: "#198754", // Verde Success
+                            borderColor: "#198754",
                             backgroundColor: "#198754",
                             borderWidth: 2,
                             tension: 0.3
@@ -347,7 +326,7 @@
                         {
                             label: "IPCA (Acumulado %)",
                             data: mapValues(ipcaSorted),
-                            borderColor: "#dc3545", // Vermelho Danger
+                            borderColor: "#dc3545",
                             backgroundColor: "#dc3545",
                             borderWidth: 2,
                             tension: 0.3
@@ -355,7 +334,7 @@
                         {
                             label: "FED Funds (Média %)",
                             data: mapValues(fedSorted),
-                            borderColor: "#ffc107", // Amarelo Warning
+                            borderColor: "#ffc107",
                             backgroundColor: "#ffc107",
                             borderWidth: 2,
                             tension: 0.3
