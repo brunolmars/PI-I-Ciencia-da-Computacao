@@ -1,0 +1,416 @@
+<?php
+// Dados simulados (que viriam de um banco de dados ou API)
+$kpis = [
+    'selic' => [
+        'titulo' => 'Taxa Selic (Meta)',
+        'valor' => '15%',
+        'tendencia' => 'down', // up, down, neutral
+        'icone' => 'bi-caret-down-fill'
+    ],
+    'juros_cartao' => [
+        'titulo' => 'Juros do Cartão (Rotativo)',
+        'valor' => '439.8%',
+        'tendencia' => 'up',
+        'icone' => 'bi-caret-up-fill'
+    ],
+    'inadimplencia' => [
+        'titulo' => 'Inadimplência (90 dias +)',
+        'valor' => '43%',
+        'tendencia' => 'up',
+        'icone' => 'bi-graph-up-arrow'
+    ]
+];
+
+$selicChartData = [
+    'labels' => ["Dez/14", "Dez/15", "Dez/16", "Dez/17", "Dez/18", "Dez/19", "Dez/20", "Dez/21", "Dez/22", "Dez/23", "Dez/24", "Dez/25"],
+    'data' => [11.75, 11.25, 10.75, 10.5, 10.5, 10.75, 11.25, 12.25, 13.25, 14.25, 14.75, 15]
+];
+
+$dividaChartData = [
+    'labels' => ["Crédito Imobiliário", "Crédito Consignado", "Cartão de Crédito", "Outros"],
+    'data' => [40, 35, 15, 10],
+    'colors' => ["#0d6efd", "#20c997", "#dc3545", "#ffc107"]
+];
+
+$ipcaChartData = [
+    'labels' => ["Jun", "mai", "abr", "mar", "fev", "jan"],
+    'data' => [5.35, 5.32, 5.53, 5.48, 5.06, 4.56]
+];
+
+$cotacoes = [
+    [
+        'ativo' => 'Dólar PTAX',
+        'valor' => 'R$ 5.35',
+        'variacao' => '-0.15%',
+        'classe_variacao' => 'text-danger'
+    ],
+    [
+        'ativo' => 'Euro',
+        'valor' => 'R$ 5.92',
+        'variacao' => '+0.05%',
+        'classe_variacao' => 'text-success'
+    ],
+    [
+        'ativo' => 'Ouro (Gram)',
+        'valor' => 'R$ 385.00',
+        'variacao' => '+1.25%',
+        'classe_variacao' => 'text-success'
+    ],
+    [
+        'ativo' => 'Bitcoin',
+        'valor' => 'R$ 325,000',
+        'variacao' => '-2.50%',
+        'classe_variacao' => 'text-danger'
+    ]
+];
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Indicadores Financeiros Nacionais - SGEF</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --cor-primaria: #0d6efd;
+            --cor-fundo: #f8f9fa;
+            --cor-card: #ffffff;
+            --cor-texto: #212529;
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: var(--cor-card);
+            border-right: 1px solid #dee2e6;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .sidebar .nav-link {
+            color: var(--cor-texto) !important;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--cor-primaria) !important;
+            color: white !important;
+        }
+
+        .card {
+            background-color: var(--cor-card);
+            color: var(--cor-texto);
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .kpi-card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--cor-primaria);
+        }
+
+        .kpi-card-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">SGEF</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar"
+                aria-controls="menuNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li>
+                        <a class="nav-link" href="../index.html">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ferramentas.php#recursos">Recursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contato</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard_Bruno.php">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ferramentas.php">Ferramentas</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline-primary me-2">Entrar</a>
+                    <a href="#" class="btn btn-primary">Cadastrar-se</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="d-flex">
+        <div class="sidebar p-4 d-flex flex-column" style="width: 280px">
+            <h3 class="mb-4 text-dark">📊 SGEF - Indicadores</h3>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link active" aria-current="page">
+                        <i class="bi bi-bank me-2"></i>
+                        Nacional
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Mercado de Ações
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-cash me-2"></i>
+                        Taxas de Câmbio
+                    </a>
+                </li>
+            </ul>
+            <hr class="text-secondary" />
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
+                    id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://via.placeholder.com/32/AAAAAA/000000?text=S" alt="Perfil" width="32" height="32"
+                        class="rounded-circle me-2" />
+                    <strong>SGEF User</strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
+                    <li><a class="dropdown-item" href="#">Configurações</a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="dropdown-item" href="#">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content flex-grow-1 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold fs-3">Indicadores Macroeconômicos (Brasil)</h1>
+                <span class="text-secondary">Fonte: BCB e IpeaData </span>
+            </div>
+
+            <div class="row mb-4">
+                <?php foreach ($kpis as $key => $kpi): ?>
+                    <div class="col-md-4 mb-3">
+                        <div class="card p-3 h-100">
+                            <div class="kpi-card-title"><?php echo $kpi['titulo']; ?></div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span
+                                    class="kpi-card-value <?php echo isset($kpi['classe_valor']) ? $kpi['classe_valor'] : ''; ?>"><?php echo $kpi['valor']; ?></span>
+                                <i class="bi <?php echo $kpi['icone']; ?> text-danger fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 mb-4">
+                    <div class="card p-4">
+                        <h4 class="mb-3 fs-5">
+                            Tendência Histórica da Taxa Selic (Últimos 12 meses)
+                        </h4>
+                        <canvas id="selicChart" style="max-height: 350px"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="card p-4 h-100">
+                        <h4 class="mb-3 fs-5">Distribuição da Dívida das Famílias</h4>
+                        <canvas id="dividaChart" style="max-height: 350px"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card p-4 h-100">
+                        <h4 class="mb-3 fs-5">
+                            Taxa de Inflação (IPCA - Últimos 6 meses)
+                        </h4>
+                        <canvas id="ipcaChart" style="max-height: 300px"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-4">
+                    <div class="card p-4 h-100">
+                        <h4 class="mb-3 fs-5">Cotações Internacionais Chave</h4>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ativo</th>
+                                    <th>Valor</th>
+                                    <th>Variação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($cotacoes as $cotacao): ?>
+                                    <tr>
+                                        <td><?php echo $cotacao['ativo']; ?></td>
+                                        <td><?php echo $cotacao['valor']; ?></td>
+                                        <td><span
+                                                class="<?php echo $cotacao['classe_variacao']; ?>"><?php echo $cotacao['variacao']; ?></span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-light text-dark py-4 mt-auto border-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="fw-bold mb-1">Fontes de Dados do Dashboard:</p>
+                    <ul class="list-unstyled small text-secondary">
+                        <li>
+                            <i class="bi bi-link-45deg me-2"></i>Taxa Selic e Juros: Banco
+                            Central do Brasil (BCB).
+                        </li>
+                        <li>
+                            <i class="bi bi-link-45deg me-2"></i>Inflação (IPCA): Instituto
+                            Brasileiro de Geografia e Estatística (IBGE).
+                        </li>
+                        <li>
+                            <i class="bi bi-link-45deg me-2"></i>Indicadores de Dívida e
+                            Câmbio: IpeaData e B3.
+                        </li>
+                        <li>
+                            <i class="bi bi-link-45deg me-2"></i>*Todos os dados exibidos
+                            são atualizados des de junho de 2025.
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-1 fw-bold">
+                        SGEF - Sistema de Gestão e Educação Financeira
+                    </p>
+                    <p class="small text-secondary">
+                        &copy; 2025 SGEF. Todos os direitos reservados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dados injetados pelo PHP
+        const selicData = <?php echo json_encode($selicChartData); ?>;
+        const dividaData = <?php echo json_encode($dividaChartData); ?>;
+        const ipcaData = <?php echo json_encode($ipcaChartData); ?>;
+
+        const ctx1 = document.getElementById("selicChart").getContext("2d");
+        new Chart(ctx1, {
+            type: "line",
+            data: {
+                labels: selicData.labels,
+                datasets: [
+                    {
+                        label: "Taxa Selic",
+                        data: selicData.data,
+                        borderColor: "rgb(13, 110, 253)",
+                        backgroundColor: "rgba(13, 110, 253, 0.2)",
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: "rgb(13, 110, 253)",
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        beginAtZero: false,
+                        title: { display: true, text: "Taxa (%)" },
+                    },
+                },
+                plugins: {
+                    legend: { display: false },
+                },
+            },
+        });
+
+        const ctx2 = document.getElementById("dividaChart").getContext("2d");
+        new Chart(ctx2, {
+            type: "doughnut",
+            data: {
+                labels: dividaData.labels,
+                datasets: [
+                    {
+                        data: dividaData.data,
+                        backgroundColor: dividaData.colors,
+                        hoverOffset: 8,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                    },
+                },
+            },
+        });
+
+        const ctx3 = document.getElementById("ipcaChart").getContext("2d");
+        new Chart(ctx3, {
+            type: "bar",
+            data: {
+                labels: ipcaData.labels,
+                datasets: [
+                    {
+                        label: "IPCA Mensal",
+                        data: ipcaData.data,
+                        backgroundColor: "#0d6efd",
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: "Variação (%)" },
+                    },
+                },
+                plugins: {
+                    legend: { display: false },
+                },
+            },
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
