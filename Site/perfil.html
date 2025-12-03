@@ -9,15 +9,15 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap"
       rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -25,12 +25,14 @@
     <style>
       :root {
         --cor-primaria: #007bff;
+        --fundo-claro: #f8f9fa;
       }
       body {
-        background: #f8f9fa;
+        background: var(--fundo-claro);
         font-family: "Montserrat", sans-serif;
       }
 
+      /* Navbar igual ao Index */
       .navbar {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
@@ -44,8 +46,10 @@
         color: #343a40 !important;
       }
 
+      /* Estilos do Quiz */
       .card {
         border-radius: 12px;
+        border: none;
       }
       .nav-step {
         font-size: 18px;
@@ -53,17 +57,19 @@
       }
       .active-step {
         color: var(--cor-primaria) !important;
-        border-bottom: 2px solid var(--cor-primaria);
+        border-bottom: 3px solid var(--cor-primaria);
         padding-bottom: 5px;
       }
 
       .step-indicator > span {
         cursor: default;
         padding: 0 15px;
+        color: #adb5bd;
       }
     </style>
   </head>
   <body>
+    
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
       <div class="container">
         <a class="navbar-brand" href="index.html">SGEF</a>
@@ -85,10 +91,19 @@
               <a class="nav-link" href="index.html">Início</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Educação</a>
+              <a class="nav-link" href="index.html#recursos">Recursos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="glossario.html">Glossário</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Contato</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard_Bruno.html">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="ferramentas.html">Ferramentas</a>
             </li>
           </ul>
 
@@ -102,117 +117,111 @@
 
     <div class="container py-5">
       <div class="col-lg-8 mx-auto">
-        <h1 class="fw-bold text-center mb-5">
+        <h1 class="fw-bold text-center mb-5 display-5">
           Descubra Seu Perfil de Investidor
         </h1>
 
-        <div class="d-flex justify-content-around mb-4 nav-step step-indicator">
+        <div class="d-flex justify-content-center align-items-center mb-5 nav-step step-indicator gap-3">
           <span id="step1Nav" class="active-step">1. Perfil</span>
-          <i class="bi bi-arrow-right text-secondary"></i>
-          <span id="step2Nav" class="text-secondary">2. Resultado</span>
+          <i class="bi bi-chevron-right text-muted" style="font-size: 0.8rem;"></i>
+          <span id="step2Nav">2. Resultado</span>
         </div>
 
         <div id="step1">
-          <div class="card p-4 shadow">
-            <h3 class="mb-4 text-center">
-              Responda as perguntas para calcular seu score
-            </h3>
+          <div class="card p-5 shadow-sm">
+            <h4 class="mb-4 text-center text-secondary fw-bold">
+              Responda para calcularmos sua estratégia
+            </h4>
 
             <form id="formPerfil">
-              <label class="mt-2 fw-bold form-label">1. Idade</label>
-              <select class="form-select" id="idade">
-                <option value="1">Até 30 anos</option>
-                <option value="2">31–45 anos</option>
-                <option value="3">46–60 anos</option>
-                <option value="4">Acima de 60 anos</option>
-              </select>
+              <div class="mb-4">
+                <label class="fw-bold form-label mb-2">1. Qual a sua faixa etária?</label>
+                <select class="form-select form-select-lg" id="idade">
+                  <option value="1">Até 30 anos</option>
+                  <option value="2">31–45 anos</option>
+                  <option value="3">46–60 anos</option>
+                  <option value="4">Acima de 60 anos</option>
+                </select>
+              </div>
 
-              <label class="mt-4 fw-bold form-label"
-                >2. Seu conhecimento sobre investimentos</label
-              >
-              <select class="form-select" id="conhecimento">
-                <option value="1">Nenhum (Começando agora)</option>
-                <option value="2">Básico (Conheço alguns termos)</option>
-                <option value="3">
-                  Intermediário (Já invisto em produtos básicos)
-                </option>
-                <option value="4">
-                  Avançado (Invisto em vários tipos de ativos)
-                </option>
-              </select>
+              <div class="mb-4">
+                <label class="fw-bold form-label mb-2">2. Qual seu nível de conhecimento?</label>
+                <select class="form-select form-select-lg" id="conhecimento">
+                  <option value="1">Nenhum (Começando agora)</option>
+                  <option value="2">Básico (Conheço alguns termos)</option>
+                  <option value="3">Intermediário (Já invisto em produtos básicos)</option>
+                  <option value="4">Avançado (Invisto em vários tipos de ativos)</option>
+                </select>
+              </div>
 
-              <label class="mt-4 fw-bold form-label"
-                >3. Como reage a perdas em seus investimentos?</label
-              >
-              <select class="form-select" id="queda">
-                <option value="1">
-                  Entro em pânico e vendo tudo rapidamente
-                </option>
-                <option value="2">Vendo uma parte para limitar a perda</option>
-                <option value="3">
-                  Mantenho a posição, esperando a recuperação
-                </option>
-                <option value="4">
-                  Compro mais, aproveitando os preços baixos
-                </option>
-              </select>
+              <div class="mb-4">
+                <label class="fw-bold form-label mb-2">3. Se seus investimentos caírem 20% hoje, o que você faz?</label>
+                <select class="form-select form-select-lg" id="queda">
+                  <option value="1">Entro em pânico e vendo tudo rapidamente</option>
+                  <option value="2">Vendo uma parte para não perder mais</option>
+                  <option value="3">Mantenho a posição e aguardo recuperar</option>
+                  <option value="4">Compro mais, aproveitando que está barato</option>
+                </select>
+              </div>
 
-              <label class="mt-4 fw-bold form-label"
-                >4. Objetivo principal do investimento</label
-              >
-              <select class="form-select" id="objetivo">
-                <option value="1">Preservação do patrimônio e segurança</option>
-                <option value="2">Renda e liquidez no médio prazo</option>
-                <option value="3">
-                  Crescimento significativo no longo prazo
-                </option>
-                <option value="4">
-                  Alta rentabilidade, aceitando o risco elevado
-                </option>
-              </select>
+              <div class="mb-4">
+                <label class="fw-bold form-label mb-2">4. Qual seu principal objetivo?</label>
+                <select class="form-select form-select-lg" id="objetivo">
+                  <option value="1">Segurança total (Tenho medo de perder)</option>
+                  <option value="2">Renda mensal e liquidez no médio prazo</option>
+                  <option value="3">Crescimento do patrimônio no longo prazo</option>
+                  <option value="4">Ficar rico rápido, aceitando riscos altos</option>
+                </select>
+              </div>
 
               <button
                 type="button"
-                class="btn btn-primary btn-lg w-100 mt-5 shadow"
+                class="btn btn-primary btn-lg w-100 mt-4 shadow-sm fw-bold py-3"
                 onclick="calcularPerfil()"
               >
-                Descobrir Meu Perfil ➜
+                Ver Meu Resultado <i class="bi bi-arrow-right ms-2"></i>
               </button>
             </form>
           </div>
         </div>
 
         <div id="step2" class="d-none">
-          <div class="card p-4 shadow text-center">
-            <h2 class="mb-4">🎉 Resultado da Análise</h2>
+          <div class="card p-5 shadow-sm text-center">
+            <h2 class="mb-4 fw-bold">Seu Perfil é:</h2>
 
-            <div id="resultado" class="mb-4"></div>
+            <div id="resultado" class="mb-5"></div>
 
-            <div class="row">
-              <div class="col-md-6 mx-auto">
-                <canvas id="graficoCarteira" width="400" height="400"></canvas>
+            <div class="row justify-content-center">
+              <div class="col-md-8">
+                <canvas id="graficoCarteira"></canvas>
               </div>
             </div>
 
             <button
-              class="btn btn-secondary w-50 mx-auto mt-5"
+              class="btn btn-outline-secondary w-50 mx-auto mt-5"
               onclick="voltar()"
             >
-              ⬅ Refazer Questionário
+              <i class="bi bi-arrow-counterclockwise me-2"></i>Refazer Teste
             </button>
           </div>
         </div>
       </div>
     </div>
 
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+          <p class="mb-0 small">
+            &copy; 2025 SGEF - Sistema de Gestão e Educação Financeira. Todos os direitos reservados.
+          </p>
+        </div>
+    </footer>
+
     <script>
       let myChart = null;
 
       function calcularPerfil() {
         let idade = parseInt(document.getElementById("idade").value);
-        let conhecimento = parseInt(
-          document.getElementById("conhecimento").value
-        );
+        let conhecimento = parseInt(document.getElementById("conhecimento").value);
         let queda = parseInt(document.getElementById("queda").value);
         let objetivo = parseInt(document.getElementById("objetivo").value);
 
@@ -221,43 +230,37 @@
         let perfil = "";
         let perfilTexto = "";
         let carteira = {};
+        let corPerfil = "";
 
         if (score <= 7) {
           perfil = "Conservador";
+          corPerfil = "text-primary";
           perfilTexto =
-            "Você prioriza a segurança e a preservação do seu patrimônio. Seus investimentos devem focar em ativos de baixo risco e alta liquidez.";
-          carteira = { rendaFixa: 75, fundos: 15, acoes: 10 };
+            "Você prioriza a segurança acima de tudo. Dormir tranquilo é mais importante do que grandes rentabilidades. Seus investimentos focam em proteção contra a inflação.";
+          carteira = { rendaFixa: 80, fundos: 15, acoes: 5 };
         } else if (score <= 11) {
           perfil = "Moderado";
+          corPerfil = "text-success";
           perfilTexto =
-            "Você busca um equilíbrio entre segurança e rentabilidade. Aceita riscos moderados para tentar ganhos superiores à Renda Fixa.";
-          carteira = { rendaFixa: 45, fundos: 25, acoes: 30 };
+            "Você aceita correr riscos calculados para ganhar mais do que a poupança, mas não coloca todo o seu dinheiro na reta. Busca o equilíbrio perfeito.";
+          carteira = { rendaFixa: 50, fundos: 30, acoes: 20 };
         } else {
           perfil = "Arrojado";
+          corPerfil = "text-danger";
           perfilTexto =
-            "Você está disposto a aceitar riscos maiores em busca de alta rentabilidade no longo prazo. Seu foco é o crescimento do capital.";
+            "Você entende que risco e retorno andam juntos. Aceita ver seu patrimônio oscilar no curto prazo, focando na multiplicação do capital no longo prazo.";
           carteira = { rendaFixa: 20, fundos: 30, acoes: 50 };
         }
 
-        document.getElementById(
-          "resultado"
-        ).innerHTML = `<h3 class="text-primary fw-bold">${perfil}</h3>
-          <p class="fs-5">${perfilTexto}</p>
-          <p class="lead fw-bold mt-4">Alocação de Carteira Recomendada:</p>
-          <div class="row justify-content-center text-start">
-             <div class="col-md-8">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Renda Fixa e Caixa: <span class="badge bg-primary fs-6">${carteira.rendaFixa}%</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Fundos, ETFs e Multimercado: <span class="badge bg-success fs-6">${carteira.fundos}%</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Ações e Renda Variável: <span class="badge bg-danger fs-6">${carteira.acoes}%</span>
-                    </li>
-                </ul>
-             </div>
+        document.getElementById("resultado").innerHTML = `
+          <h1 class="display-3 fw-bold ${corPerfil} mb-3">${perfil}</h1>
+          <p class="lead text-secondary mb-4">${perfilTexto}</p>
+          <hr class="my-4 w-50 mx-auto">
+          <h5 class="fw-bold mb-3">Recomendação de Carteira:</h5>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+             <span class="badge bg-primary p-2 fs-6">Renda Fixa: ${carteira.rendaFixa}%</span>
+             <span class="badge bg-success p-2 fs-6">Fundos/FIIs: ${carteira.fundos}%</span>
+             <span class="badge bg-danger p-2 fs-6">Ações: ${carteira.acoes}%</span>
           </div>`;
 
         gerarGrafico(carteira);
@@ -266,8 +269,10 @@
         document.getElementById("step2").classList.remove("d-none");
 
         document.getElementById("step1Nav").classList.remove("active-step");
+        document.getElementById("step1Nav").style.color = "#adb5bd";
+        
         document.getElementById("step2Nav").classList.add("active-step");
-        document.getElementById("step2Nav").classList.remove("text-secondary"); // Remove cor secundária
+        document.getElementById("step2Nav").style.color = "#007bff";
       }
 
       function gerarGrafico(carteira) {
@@ -277,37 +282,23 @@
 
         const ctx = document.getElementById("graficoCarteira").getContext("2d");
         myChart = new Chart(ctx, {
-          type: "pie",
+          type: "doughnut",
           data: {
-            labels: ["Renda Fixa/Caixa", "Fundos/ETFs", "Ações/RV"],
+            labels: ["Renda Fixa", "Fundos/FIIs", "Ações"],
             datasets: [
               {
                 data: [carteira.rendaFixa, carteira.fundos, carteira.acoes],
-                backgroundColor: ["#0d6efd", "#20c997", "#dc3545"],
-                hoverOffset: 4,
+                backgroundColor: ["#0d6efd", "#198754", "#dc3545"],
+                borderWidth: 0,
+                hoverOffset: 10,
               },
             ],
           },
           options: {
             responsive: true,
+            cutout: '70%',
             plugins: {
-              legend: {
-                position: "bottom",
-              },
-              tooltip: {
-                callbacks: {
-                  label: function (context) {
-                    let label = context.label || "";
-                    if (label) {
-                      label += ": ";
-                    }
-                    if (context.parsed !== null) {
-                      label += context.parsed + "%";
-                    }
-                    return label;
-                  },
-                },
-              },
+              legend: { position: "bottom", labels: { padding: 20, font: { size: 14 } } },
             },
           },
         });
@@ -323,8 +314,10 @@
         document.getElementById("step1").classList.remove("d-none");
 
         document.getElementById("step2Nav").classList.remove("active-step");
-        document.getElementById("step2Nav").classList.add("text-secondary");
+        document.getElementById("step2Nav").style.color = "#adb5bd";
+        
         document.getElementById("step1Nav").classList.add("active-step");
+        document.getElementById("step1Nav").style.color = ""; // Volta ao original
       }
     </script>
 
