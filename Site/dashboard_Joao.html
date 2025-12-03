@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>SGEF - Dashboard João</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --cor-primaria: #007bff;
+      --cor-secundaria: #6c757d;
+      --fundo-claro: #f8f9fa;
+    }
+
+    body {
+      background-color: var(--fundo-claro);
+      font-family: "Montserrat", sans-serif;
+    }
+
+    .navbar {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand {
+      font-weight: 900;
+      color: var(--cor-primaria) !important;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: #343a40 !important;
+    }
+
+    .card {
+      border-radius: 16px;
+    }
+
+    .chart-card-title {
+      font-weight: 700;
+      color: var(--cor-secundaria);
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">SGEF</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar"
+        aria-controls="menuNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="menuNavbar">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li>
+            <a class="nav-link" href="index.html">Início</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#recursos">Recursos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contato</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ferramentas.php">Ferramentas</a>
+          </li>
+        </ul>
+
+        <div class="d-flex">
+          <a href="#" class="btn btn-outline-primary me-2">Entrar</a>
+          <a href="#" class="btn btn-primary">Cadastrar-se</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <h2 class="mb-3">Dashboard João — Gráficos a partir de CSV</h2>
+    <div class="alert alert-info" role="alert">
+      Estes gráficos sintetizam indicadores ligados ao acesso ao crédito, endividamento e comportamento financeiro.
+      A leitura conjunta ajuda a entender desafios e avanços da educação financeira no Brasil:
+      mais transparência (Cadastro Positivo), compreensão de custos do crédito, e gestão de dívidas (Desenrola),
+      tudo impactando a capacidade das famílias de planejar, poupar e investir de forma sustentável.
+    </div>
+
+    <div id="chartsContainer" class="row g-4">
+      <!-- Os cards de gráficos serão inseridos dinamicamente aqui -->
+    </div>
+  </div>
+
+  <footer class="bg-dark text-white py-4 mt-auto">
+    <div class="container text-center">
+      <p class="mb-0">
+        &copy; 2025 SGEF - Sistema de Gestão e Educação Financeira. Todos os
+        direitos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Lista de arquivos CSV na pasta ../database/csv_joao
+    // Obs.: Os formatos podem variar; o parser abaixo tenta identificar separador e coluna numérica.
+    const csvFiles = [
+      {
+        file: "../database/csv_joao/bcdata.sgs.29038.csv",
+        title: "BCB Série 29038",
+        type: "line"
+      },
+      {
+        file: "../database/csv_joao/cadastro-positivo-emprestimo-pessoal-mar2025.csv",
+        title: "Cadastro Positivo — Empréstimo Pessoal (Mar/2025)",
+        type: "bar"
+      },
+      {
+        file: "../database/csv_joao/cartao-de-credito-cadastro-positivo-marco-2025.csv",
+        title: "Cartão de Crédito — Cadastro Positivo (Mar/2025)",
+        type: "bar"
+      },
+      {
+        file: "../database/csv_joao/dados_desenrola.csv",
+        title: "Programa Desenrola — Dados",
+        type: "line"
+      },
+      {
+        file: "../database/csv_joao/demanda-dos-consumidores-por-credito-agosto2025.csv",
+        title: "Demanda dos Consumidores por Crédito (Ago/2025)",
+        type: "bar"
+      },
+      {
+        file: "../database/csv_joao/DEVEDORES_DIVIDA_ATIVA-2023-12.csv",
+        title: "Devedores — Dívida Ativa (Dez/2023)",
+        type: "bar"
+      }
+    ];
+
+    // Paleta de cores para gráficos
+    const palette = [
+      "#007bff",
+      "#28a745",
+      "#dc3545",
+      "#ffc107",
+      "#17a2b8",
+      "#6f42c1"
+    ];
+
+    // Utilitários de parsing
+    function detectSeparator(line) {
+      // Tenta detectar ";" ou "," como separador principal
+      const semicolonCount = (line.match(/;/g) || []).length;
+      const commaCount = (line.match(/,/g) || []).length;
+      return semicolonCount > commaCount ? ";" : ",";
+    }
+
+    function tryParseNumber(str) {
+      if (!str) return NaN;
+      const cleaned = String(str).replace(/"/g, '').replace(/\./g, '').replace(/,/, '.');
+      const n = parseFloat(cleaned);
+      return isNaN(n) ? NaN : n;
+    }
+
+    async function loadCSV(url) {
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error(`Falha ao carregar ${url}`);
+      const text = await resp.text();
+      const linesRaw = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (linesRaw.length === 0) return { labels: [], values: [] };
+
+      const sep = detectSeparator(linesRaw[0]);
+      const hasHeader = /[a-zA-Z]/.test(linesRaw[0]);
+      const lines = hasHeader ? linesRaw.slice(1) : linesRaw;
+
+      const labels = [];
+      const values = [];
+
+      for (const line of lines) {
+        const parts = line.split(sep).map(s => s.trim());
+        if (parts.length === 0) continue;
+
+        // Heurística: primeiro campo é label, último campo numérico
+        const label = parts[0];
+        let value = NaN;
+
+        for (let i = parts.length - 1; i >= 0; i--) {
+          const v = tryParseNumber(parts[i]);
+          if (!isNaN(v)) { value = v; break; }
+        }
+
+        if (!isNaN(value)) {
+          labels.push(label);
+          values.push(value);
+        }
+      }
+
+      return { labels, values };
+    }
+
+    function createChartCard(container, id, title, caption) {
+      const col = document.createElement('div');
+      col.className = 'col-12';
+
+      const card = document.createElement('div');
+      card.className = 'card p-4 shadow';
+
+      const h = document.createElement('h5');
+      h.className = 'chart-card-title mb-3';
+      h.textContent = title;
+
+      const canvasWrap = document.createElement('div');
+      canvasWrap.style.height = '420px';
+
+      const canvas = document.createElement('canvas');
+      canvas.id = id;
+      canvasWrap.appendChild(canvas);
+
+      const small = document.createElement('small');
+      small.className = 'text-muted mt-3';
+      small.style.display = 'block';
+      small.textContent = caption || 'Valores conforme arquivo CSV. Eixo X: rótulos; Eixo Y: valores numéricos.';
+
+      card.appendChild(h);
+      card.appendChild(canvasWrap);
+      card.appendChild(small);
+      col.appendChild(card);
+      container.appendChild(col);
+    }
+
+    async function renderCSVCharts() {
+      const container = document.getElementById('chartsContainer');
+      const charts = [];
+
+      for (let i = 0; i < csvFiles.length; i++) {
+        const cfg = csvFiles[i];
+        const chartId = `chart_${i}`;
+        const captions = {
+          "BCB Série 29038": "Série 29038 do BCB. Eixo X: data/competência; Eixo Y: valor da série (unidade conforme CSV). Fonte: BCB/SGS. Relevância: oscilações de indicadores macro (juros/atividade) impactam o custo do crédito e a necessidade de educação financeira para planejamento e proteção contra ciclos econômicos.",
+          "Cadastro Positivo — Empréstimo Pessoal (Mar/2025)": "Cadastro Positivo para empréstimo pessoal. Eixo X: categoria/segmento; Eixo Y: quantidade ou índice conforme CSV. Relevância: histórico de pagamentos melhora a avaliação de risco, possibilitando juros mais justos para quem tem boa disciplina financeira, incentivando práticas saudáveis de crédito.",
+          "Cartão de Crédito — Cadastro Positivo (Mar/2025)": "Cadastro Positivo para cartão de crédito. Eixo X: categoria/segmento; Eixo Y: quantidade ou índice conforme CSV. Relevância: uso consciente de cartão (controle de limite, pagamento total) reduz inadimplência; educação financeira orienta sobre juros rotativos e planejamento de despesas.",
+          "Programa Desenrola — Dados": "Dados do Programa Desenrola. Eixo X: período ou categoria; Eixo Y: valor agregado (ex.: número de acordos, montante). Relevância: renegociação de dívidas cria oportunidade para reorganizar o orçamento; educação financeira é crucial para evitar reincidência e construir reserva.",
+          "Demanda dos Consumidores por Crédito (Ago/2025)": "Demanda por crédito. Eixo X: categoria/período; Eixo Y: índice ou volume (ver CSV). Relevância: aumento da demanda sem educação financeira pode elevar endividamento; com orientação, o crédito vira ferramenta de alavancagem responsável (estudos, negócios, bens duráveis).",
+          "Devedores — Dívida Ativa (Dez/2023)": "Devedores em dívida ativa. Eixo X: categoria/período; Eixo Y: quantidade ou valor total (ver CSV). Relevância: entender obrigações tributárias e consequências do não pagamento faz parte da educação financeira cidadã, reduzindo penalidades e restrições futuras."
+        };
+        createChartCard(container, chartId, cfg.title, captions[cfg.title]);
+
+        try {
+          const { labels, values } = await loadCSV(cfg.file);
+          const ctx = document.getElementById(chartId);
+
+          charts.push(new Chart(ctx, {
+            type: cfg.type,
+            data: {
+              labels: labels,
+              datasets: [{
+                label: cfg.title,
+                data: values,
+                borderColor: palette[i % palette.length],
+                backgroundColor: cfg.type === 'line'
+                  ? palette[i % palette.length]
+                  : palette[i % palette.length] + '80',
+                fill: cfg.type === 'line',
+                tension: 0.3
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      let label = context.dataset.label || '';
+                      if (label) label += ': ';
+                      if (context.parsed.y !== null) {
+                        const v = context.parsed.y;
+                        const fmt = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
+                        return label + fmt.format(v);
+                      }
+                      return label;
+                    }
+                  }
+                },
+                legend: { display: true }
+              },
+              scales: {
+                y: {
+                  title: { display: true, text: 'Valor (unidade conforme CSV)' },
+                  ticks: {
+                    callback: function (value) {
+                      return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 }).format(value);
+                    }
+                  }
+                },
+                x: {
+                  title: { display: true, text: 'Rótulos (datas/categorias)' }
+                }
+              }
+            }
+          }));
+        } catch (err) {
+          const alert = document.createElement('div');
+          alert.className = 'alert alert-warning';
+          alert.textContent = `Não foi possível carregar ${cfg.title}: ${err.message}`;
+          container.appendChild(alert);
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', renderCSVCharts);
+  </script>
+
+</body>
+
